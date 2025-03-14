@@ -3,9 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/reset.css">
+    <link rel="stylesheet" href="../styles/login.css">
     <title>Login</title>
 </head>
 <body>
-    Login
+    <form action="" class="container-login">
+        <img class="login-img" src="../imgs/contato_login.png" alt="">
+        <div class="login-titulo">Faça login na agenda</div>
+        <div class="login-inputs">
+            <div class="inputs-email">
+                <label for="email">E-mail</label>
+                <input id="email" class="input-email" type="email" placeholder="E-mail">
+            </div>
+            <div class="inputs-password">
+                <label for="password">Senha</label>
+                <input id="password" class="input-password" type="password" placeholder="Senha">
+            </div>
+        </div>
+        <div class="login-buttons">
+            <button class="buttons-login">Logar</button>
+            <button class="buttons-cadastrar">Cadastrar</button>
+        </div>
+    </form>
 </body>
 </html>
