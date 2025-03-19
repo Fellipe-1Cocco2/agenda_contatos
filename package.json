@@ -1,0 +1,26 @@
+{
+  "name": "agenda_contatos",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fellipe-1Cocco2/agenda_contatos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fellipe-1Cocco2/agenda_contatos/issues"
+  },
+  "homepage": "https://github.com/Fellipe-1Cocco2/agenda_contatos#readme",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.12.1"
+  }
+}
