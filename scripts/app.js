@@ -1,14 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
-import VendaMensal from "./VendaMensal.js";
+import User from "./User.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { definirRotas } from "./rotas.js";
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
+
+definirRotas(app);
 
 app.use(express.json());
 
@@ -29,14 +34,34 @@ const connectDB = async () => {
 
 connectDB();
 
-// create
-app.post("/vendas", async (req, res) => {
-  try {
-    const novaVendaMensal = await VendaMensal.create(req.body);
-    res.json(novaVendaMensal);
-  } catch (error) {
-    res.json({ error: error });
+// Registro de usuário
+app.post("/register", async (req, res) => {
+  const { username, email, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = new User({ username, email, password: hashedPassword });
+  await user.save();
+  res.status(201).send("Usuário registrado com sucesso!");
+});
+
+// Rota para login
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return res.status(400).send("Usuário não encontrado!");
   }
+
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    return res.status(400).send("Senha incorreta!");
+  }
+
+  const token = jwt.sign({ userId: user._id }, "secretkey", {
+    expiresIn: "1h",
+  });
+  res.json({ token });
 });
 
 // Read
@@ -73,11 +98,6 @@ app.delete("/vendas/:id", async (req, res) => {
   } catch (error) {
     res.json({ error: error });
   }
-});
-
-// Servir index.html ao acessar a raiz
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 app.listen(PORT, () => {
