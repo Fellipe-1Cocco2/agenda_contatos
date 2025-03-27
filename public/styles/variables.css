@@ -1,8 +1,10 @@
-:root{
-    --color-1: #0158CC;
-    --color-2: #CDCDCD;
-    --color-3: #C2E7FF;
-    --color-4: #000000;
-    --color-5: #6F6F6F;
-    --color-6: #ffffff;
+:root {
+  --color-1: #0158cc;
+  --color-2: #cdcdcd;
+  --color-3: #c2e7ff;
+  --color-4: #000000;
+  --color-5: #6f6f6f;
+  --color-6: #ffffff;
+
+  --font: Arial, Helvetica, sans-serif;
 }

@@ -1,12 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/reset.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/index.css" />
     <title>Agenda de contatos</title>
-</head>
-<body>
-    Agenda de contatos
-</body>
+  </head>
+  <body>
+    <header class="header-container">
+      <div class="header-inicio">
+        <img src="./imgs/menu-aberto.png" class="inicio-icon_menu" />
+        <img src="./imgs/agenda.png" class="inicio-icon_agenda" />
+        <div class="inicio-text_contato">Contatos</div>
+      </div>
+      <div class="header-pesquisa">
+        <img src="./imgs/lupa.png" class="pesquisa-icon_pesquisa" />
+        <input
+          id="pesquisa"
+          class="input-pesquisa"
+          type="text"
+          placeholder="Pesquisar"
+        />
+      </div>
+      <div class="header-confg_perfil">
+        <img src="./imgs/configuracoes.png" class="confg_perfil-icon_config" />
+        <img src="./imgs/perfil.png" class="confg_perfil-icon_perfil" />
+      </div>
+    </header>
+    <main class="main-container">
+      <nav class="nav-container">
+        <a href="#" class="nav-link-criar_contato">
+          <img src="./imgs/mais.png" class="link-criar_contato-img" />
+          <div class="link-criar_contato-texto">Criar contato</div>
+        </a>
+        <div class="nav-menu">
+          <a href="#" class="menu-contatos">
+            <img src="./imgs/contato.png" />
+            <div class="menu-contatos-texto">Contatos</div>
+          </a>
+          <a href="#" class="menu-favoritos">
+            <img src="./imgs/estrela.png" />
+            <div class="menu-favoritos-texto">Favoritos</div>
+          </a>
+          <a href="#" class="menu-lixeira">
+            <img src="./imgs/lixeira.png" />
+            <div class="menu-lixeira-texto">Lixeira</div>
+          </a>
+        </div>
+        <div></div>
+      </nav>
+      <div class="contatos-container">
+        <h1 class="contatos-titulo">Contatos</h1>
+        <div class="contatos-cabecalho"></div>
+        <div></div>
+      </div>
+    </main>
+  </body>
 </html>
