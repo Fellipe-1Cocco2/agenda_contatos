@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./styles/reset.css" />
-    <link rel="stylesheet" href="./styles/index.css" />
-    <title>Agenda de contatos</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
+    <link rel="stylesheet" href="../styles/criar_contato.css" />
+    <title>Criar contato</title>
   </head>
   <body>
     <header class="header-container">
@@ -35,7 +35,7 @@
           <div class="link-criar_contato-texto">Criar contato</div>
         </a>
         <div class="nav-menu">
-          <a href="#" class="menu-contatos menu-link">
+          <a href="/" class="menu-contatos menu-link">
             <img class="img-icons" src="./imgs/contato.png" />
             <div class="menu-contatos-texto">Contatos</div>
           </a>
@@ -53,14 +53,36 @@
           <img src="./imgs/mais.png" class="img-icons" />
         </div>
       </nav>
-      <div class="contatos-container">
-        <h1 class="contatos-titulo">Contatos (0)</h1>
-        <div class="contatos-cabecalho">
-          <div class="cabecalho-nome cabecalho-cabeca">Nome</div>
-          <div class="cabecalho-telefone cabecalho-cabeca">Telefone</div>
-          <div class="cabecalho-email cabecalho-cabeca">E-mail</div>
-        </div>
-        <div></div>
+      <div class="criar_contatos-container">
+        <h1 class="criar_contatos-titulo">Criar contato</h1>
+        <form class="form-criar_contatos">
+          <img src="../imgs/adicionar-contato.png" class="img-criar_contato" />
+          <input type="text" id="nome" class="input-nome" placeholder="Nome" />
+          <input
+            type="text"
+            id="sobrenome"
+            class="input-sobrenome"
+            placeholder="Sobrenome"
+          />
+          <input
+            type="tel"
+            id="telefone"
+            class="input-telefone"
+            placeholder="Telefone"
+          />
+          <input
+            type="text"
+            id="email"
+            class="input-email"
+            placeholder="E-mail (opicional)"
+          />
+          <input
+            type="calendar"
+            id="aniversario"
+            class="input-aniversario"
+            placeholder="Aniversário (opicional)"
+          />
+        </form>
       </div>
     </main>
   </body>

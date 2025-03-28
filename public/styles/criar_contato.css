@@ -126,31 +126,62 @@ body {
   font-weight: 700;
 }
 
-.menu-contatos {
-  background-color: var(--color-3);
-}
-
 .img-icons {
   width: 15px;
   height: 15px;
 }
 
-.contatos-titulo {
+.criar_contatos-titulo {
   font-size: 26px;
 }
 
-.contatos-container {
+.criar_contatos-container {
   padding: 30px;
   width: 60%;
 }
 
-.contatos-cabecalho {
+.form-criar_contatos {
   display: flex;
-  border-bottom: 1px solid var(--color-5);
-  gap: 25%;
-  padding: 20px 0px 10px 20px;
+  flex-direction: column;
+  width: 30%;
+  gap: 10px;
 }
 
-.cabecalho-cabeca {
-  color: var(--color-5);
+.img-criar_contato {
+  width: 45px;
+  height: 45px;
+  border: 1px solid var(--color-4);
+  border-radius: 50%;
+  padding: 2px;
+  margin-top: 20px;
+}
+
+.input-aniversario,
+.input-email,
+.input-telefone,
+.input-sobrenome,
+.input-nome {
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 5px;
+  background-color: var(--color-2);
+  color: var(--color-4);
+  height: 20px;
+  padding: 10px;
+}
+
+::-webkit-input-placeholder {
+  border: none;
+  font-size: 14px;
+  color: var(--color-4);
+}
+
+.input-aniversario,
+.input-email,
+.input-telefone,
+.input-sobrenome,
+.input-nome:focus {
+  outline: none;
+  color: var(--color-4);
 }

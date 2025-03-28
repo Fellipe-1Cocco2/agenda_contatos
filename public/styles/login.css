@@ -30,14 +30,10 @@ body {
   gap: 20px;
 }
 
-.inputs-email,
-.inputs-password {
-  display: flex;
-  flex-direction: column;
-}
-
 .input-password,
 .input-email {
+  display: flex;
+  flex-direction: column;
   height: 30px;
   width: 200px;
   border-radius: 5px;
