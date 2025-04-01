@@ -65,10 +65,10 @@ app.post("/login", async (req, res) => {
 });
 
 // Read
-app.get("/vendas", async (req, res) => {
+app.get("/user", async (req, res) => {
   try {
-    const vendasMensais = await VendaMensal.find();
-    res.json(vendasMensais);
+    const user = await User.find();
+    res.json(user);
   } catch (error) {
     res.json({ error: error });
   }
