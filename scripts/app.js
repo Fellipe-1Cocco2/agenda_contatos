@@ -6,20 +6,22 @@ import path from "path";
 import { fileURLToPath } from "url";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { definirRotas } from "./rotas.js";
+import { definirRotas, setUsuarioLogado } from "./rotas.js";
+import { autenticarUsuario } from "./authMiddleware.js";
+
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
 
-definirRotas(app);
-
 app.use(express.json());
 
 // Configuração para encontrar a pasta public
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+definirRotas(app);
 
 app.use(express.static(path.join(__dirname, "../public"))); // Ajustado para a nova pasta
 
@@ -44,25 +46,27 @@ app.post("/register", async (req, res) => {
   res.status(201).send("Usuário registrado com sucesso!");
 });
 
-// Rota para login
+
+// Login no app.js
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
-  if (!user) {
-    return res.status(400).send("Usuário não encontrado!");
-  }
+  if (!user) return res.status(400).send("Usuário não encontrado!");
 
   const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) {
-    return res.status(400).send("Senha incorreta!");
-  }
+  if (!isMatch) return res.status(400).send("Senha incorreta!");
+
+  // Salva usuário logado usando função exportada
+  setUsuarioLogado(user);
 
   const token = jwt.sign({ userId: user._id }, "secretkey", {
     expiresIn: "1h",
   });
+
   res.json({ token });
 });
+
 
 // Read
 app.get("/user", async (req, res) => {
@@ -73,6 +77,15 @@ app.get("/user", async (req, res) => {
     res.json({ error: error });
   }
 });
+
+// cadastro contato
+app.post("/criar-contato", async (req, res) => {
+  try{
+    
+  } catch (error){
+    res.json({error: error});
+  }
+})
 
 // Update
 app.put("/vendas/:id", async (req, res) => {

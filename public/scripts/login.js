@@ -15,9 +15,11 @@ document
     });
 
     const data = await response.json();
+    
     if (data.token) {
+      localStorage.setItem("token", data.token); // corrigido aqui
       alert("Login bem-sucedido!");
-      window.location.href = "/";
+      window.location.href = "/"; // você pode trocar o caminho se quiser
     } else {
       alert("Erro ao fazer login!");
     }
