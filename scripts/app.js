@@ -9,7 +9,6 @@ import jwt from "jsonwebtoken";
 import { definirRotas, setUsuarioLogado } from "./rotas.js";
 import { autenticarUsuario } from "./authMiddleware.js";
 
-
 dotenv.config();
 
 const app = express();
@@ -36,25 +35,34 @@ const connectDB = async () => {
 
 connectDB();
 
-// Registro de usuário
 app.post("/register", async (req, res) => {
-  const { username, email, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const { nome, email, senha } = req.body;
 
-  const user = new User({ username, email, password: hashedPassword });
-  await user.save();
-  res.status(201).send("Usuário registrado com sucesso!");
+    if (!nome || !email || !senha) {
+      return res.status(400).send("Todos os campos são obrigatórios.");
+    }
+
+    const hashedPassword = await bcrypt.hash(senha, 10);
+
+    const user = new User({ nome, email, senha: hashedPassword });
+    await user.save();
+
+    res.status(201).send("Usuário registrado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao registrar usuário:", error);
+    res.status(500).send("Erro ao registrar usuário.");
+  }
 });
-
 
 // Login no app.js
 app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, senha } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) return res.status(400).send("Usuário não encontrado!");
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  const isMatch = await bcrypt.compare(senha, user.senha);
   if (!isMatch) return res.status(400).send("Senha incorreta!");
 
   // Salva usuário logado usando função exportada
@@ -67,7 +75,6 @@ app.post("/login", async (req, res) => {
   res.json({ token });
 });
 
-
 // Read
 app.get("/user", async (req, res) => {
   try {
@@ -79,40 +86,35 @@ app.get("/user", async (req, res) => {
 });
 
 // cadastro contato
-app.post("/criar-contato", async (req, res) => {
-  try{
-    
-  } catch (error){
-    res.json({error: error});
-  }
-})
-
-// Update
-app.put("/vendas/:id", async (req, res) => {
+app.post("/criar-contato", autenticarUsuario, async (req, res) => {
   try {
-    const novaVendaMensal = await VendaMensal.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-    res.json(novaVendaMensal);
-  } catch (error) {
-    res.json({ error: error });
-  }
-});
+    const { nome, sobrenome, telefone, email, aniversario } = req.body;
 
-// Delete
-app.delete("/vendas/:id", async (req, res) => {
-  try {
-    const vendaMensalExcluida = await VendaMensal.findByIdAndDelete(
-      req.params.id
-    );
-    res.json(vendaMensalExcluida);
+    const novoContato = {
+      nome,
+      sobrenome,
+      telefone,
+      email,
+      aniversario,
+    };
+
+    // Adiciona o contato na lista do usuário logado
+    req.user.contatos.push(novoContato);
+    await req.user.save();
+
+    res.status(201).json({ mensagem: "Contato salvo com sucesso!" });
   } catch (error) {
-    res.json({ error: error });
+    res.status(500).json({ mensagem: "Erro ao salvar contato." });
   }
 });
 
 app.listen(PORT, () => {
   console.log(`O servidor está ativo na porta ${PORT}`);
+});
+
+// Rota protegida - buscar contatos
+app.get("/api/contatos", autenticarUsuario, async (req, res) => {
+  const user = await User.findById(req.userId);
+  if (!user) return res.status(404).json({ message: "Usuário não encontrado" });
+  res.json(user.contatos); // <-- aqui deve ser um array
 });

@@ -1,23 +1,22 @@
 import jwt from "jsonwebtoken";
 import User from "./User.js";
 
-export const autenticarUsuario = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+export async function autenticarUsuario(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ mensagem: "Token não fornecido" });
-  }
-
-  const token = authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ mensagem: "Token não fornecido." });
 
   try {
     const decoded = jwt.verify(token, "secretkey");
-    const usuario = await User.findById(decoded.userId).select("-password");
-    if (!usuario) return res.status(404).json({ mensagem: "Usuário não encontrado" });
+    const user = await User.findById(decoded.userId);
+    if (!user)
+      return res.status(401).json({ mensagem: "Usuário não encontrado." });
 
-    req.usuario = usuario;
+    req.user = user; // isso mantém o user completo
+    req.userId = decoded.userId; // <-- ADICIONA ISSO AQUI!
+
     next();
   } catch (error) {
-    res.status(401).json({ mensagem: "Token inválido ou expirado" });
+    return res.status(401).json({ mensagem: "Token inválido." });
   }
-};
+}

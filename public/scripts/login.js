@@ -4,23 +4,27 @@ document
     event.preventDefault();
 
     const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const senha = document.getElementById("password").value; // alterado aqui
 
     const response = await fetch("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, senha }), // alterado aqui também
     });
 
     const data = await response.json();
-    
+
     if (data.token) {
-      localStorage.setItem("token", data.token); // corrigido aqui
+      localStorage.setItem("token", data.token);
       alert("Login bem-sucedido!");
-      window.location.href = "/"; // você pode trocar o caminho se quiser
+      window.location.href = "/";
     } else {
       alert("Erro ao fazer login!");
     }
   });
+
+document.getElementById("btn-cadastrar").addEventListener("click", () => {
+  window.location.href = "/register";
+});

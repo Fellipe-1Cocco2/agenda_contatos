@@ -40,4 +40,13 @@ export function definirRotas(app) {
   app.get("/criar-contato", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/criar_contato.html"));
   });
+
+  // Rota registrar
+  app.get("/register", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/pages/register.html"));
+  });
+
+  app.get("/contato/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/pages/contato.html"));
+  });
 }

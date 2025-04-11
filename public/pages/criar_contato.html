@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../styles/reset.css" />
     <link rel="stylesheet" href="../styles/criar_contato.css" />
+    <script src="../scripts/criar_contato.js" defer></script>
     <title>Criar contato</title>
   </head>
   <body>
@@ -55,33 +56,47 @@
       </nav>
       <div class="criar_contatos-container">
         <h1 class="criar_contatos-titulo">Criar contato</h1>
-        <form class="form-criar_contatos">
+        <form class="form-criar_contatos" id="form-criar">
           <img src="../imgs/adicionar-contato.png" class="img-criar_contato" />
+
           <input type="text" id="nome" class="input-nome" placeholder="Nome" />
+          <small class="erro" id="erro-nome"></small>
+
           <input
             type="text"
             id="sobrenome"
             class="input-sobrenome"
             placeholder="Sobrenome"
           />
+          <small class="erro" id="erro-sobrenome"></small>
+
           <input
             type="tel"
             id="telefone"
             class="input-telefone"
             placeholder="Telefone"
           />
+          <small class="erro" id="erro-telefone"></small>
+
           <input
             type="text"
             id="email"
             class="input-email"
             placeholder="E-mail (opicional)"
           />
+          <small class="erro" id="erro-email"></small>
+
           <input
-            type="calendar"
+            type="date"
             id="aniversario"
             class="input-aniversario"
             placeholder="Aniversário (opicional)"
           />
+          <small class="erro" id="erro-aniversario"></small>
+
+          <div class="container-botao-criar">
+            <button class="botao-criar" type="submit">Criar</button>
+          </div>
         </form>
       </div>
     </main>
