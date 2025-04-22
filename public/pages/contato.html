@@ -63,6 +63,47 @@
         <h1 class="contato-detalhado-titulo">Detalhes do Contato</h1>
         <div id="detalhes-contato" class="detalhes-contato">
           <!-- Dados do contato serão inseridos aqui -->
+          <div id="detalhes-contato-info">
+            <p><strong>Nome:</strong> <span id="nome-contato"></span></p>
+            <p>
+              <strong>Telefone:</strong> <span id="telefone-contato"></span>
+            </p>
+            <p><strong>Email:</strong> <span id="email-contato"></span></p>
+            <p>
+              <strong>Aniversário:</strong>
+              <span id="aniversario-contato"></span>
+            </p>
+            <button class="btn-favorito" data-favorito="false">
+              <img src="../imgs/estrela-vazia.png" alt="Favorito" />
+            </button>
+            <button id="btn-editar-contato">Editar</button>
+          </div>
+
+          <!-- Formulário de edição (inicialmente escondido) -->
+          <div
+            id="form-editar-contato"
+            class="form-editar-contato"
+            style="display: none"
+          >
+            <h2>Editar Contato</h2>
+            <form id="editar-contato-form">
+              <input type="text" id="editar-nome" placeholder="Nome" required />
+              <input
+                type="text"
+                id="editar-sobrenome"
+                placeholder="Sobrenome"
+              />
+              <input
+                type="tel"
+                id="editar-telefone"
+                placeholder="Telefone"
+                required
+              />
+              <input type="email" id="editar-email" placeholder="Email" />
+              <input type="date" id="editar-aniversario" />
+              <button type="submit">Salvar Alterações</button>
+            </form>
+          </div>
         </div>
       </div>
     </main>

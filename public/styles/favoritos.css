@@ -154,3 +154,22 @@ body {
 .cabecalho-cabeca {
   color: var(--color-5);
 }
+
+.contato-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0px 10px 20px;
+}
+
+.contato-item-link {
+  display: flex;
+  text-decoration: none;
+  color: var(--color-5);
+}
+
+.contato-nome,
+.contato-email,
+.contato-telefone {
+  width: 30%;
+}

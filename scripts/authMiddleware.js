@@ -8,12 +8,18 @@ export async function autenticarUsuario(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, "secretkey");
+    if (!decoded.userId) {
+      return res
+        .status(401)
+        .json({ mensagem: "ID de usuário não encontrado no token." });
+    }
+
     const user = await User.findById(decoded.userId);
     if (!user)
       return res.status(401).json({ mensagem: "Usuário não encontrado." });
 
-    req.user = user; // isso mantém o user completo
-    req.userId = decoded.userId; // <-- ADICIONA ISSO AQUI!
+    req.user = user;
+    req.userId = decoded.userId;
 
     next();
   } catch (error) {

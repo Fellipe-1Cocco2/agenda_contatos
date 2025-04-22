@@ -173,3 +173,7 @@ body {
 .contato-telefone {
   width: 30%;
 }
+
+.oculto {
+  display: none !important;
+}

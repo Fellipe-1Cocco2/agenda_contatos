@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Valores
     const nome = document.getElementById("nome").value.trim();
     const sobrenome = document.getElementById("sobrenome").value.trim();
+    console.log("Sobrenome enviado:", sobrenome); // Verifique o valor no console
     const telefone = document.getElementById("telefone").value.trim();
     const email = document.getElementById("email").value.trim();
     const aniversario = document.getElementById("aniversario").value;
