@@ -4,34 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registrar</title>
+    <link rel="stylesheet" href="../styles/reset.css" />
     <script src="../scripts/register.js" defer></script>
-    <link rel="stylesheet" href="../styles/login.css" />
+    <link rel="stylesheet" href="../styles/register.css" />
   </head>
   <body>
     <main class="login-container">
-      <h1>Registrar Conta</h1>
       <form id="registerForm">
+        <img class="login-img" src="../imgs/contato_login.png" alt="" />
+        <h1>Registrar Conta</h1>
         <input
           type="text"
           id="nome"
           name="nome"
           placeholder="Nome de usuário"
-          required
         />
+        <span class="error-message" id="erro-nome"></span>
+
         <input
-          type="email"
+          type="text"
           id="email"
           name="email"
           placeholder="E-mail"
-          required
         />
+        <span class="error-message" id="erro-email"></span>
+
         <input
           type="password"
           id="senha"
           name="senha"
           placeholder="Senha"
-          required
         />
+        <span class="error-message" id="erro-senha"></span>
+
         <button type="submit">Registrar</button>
       </form>
       <p>Já tem conta? <a href="/login">Login</a></p>
