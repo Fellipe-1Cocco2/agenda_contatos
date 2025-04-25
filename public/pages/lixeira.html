@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../styles/reset.css" />
     <link rel="stylesheet" href="../styles/lixeira.css" />
+    <script src="../scripts/marcadores.js" defer></script>
     <title>Lixeira</title>
   </head>
   <body>
@@ -52,6 +53,9 @@
           <div class="nav-marcadores-texto">Marcadores</div>
           <img src="./imgs/mais.png" class="img-icons" />
         </div>
+        <ul id="lista-marcadores">
+          <!-- Marcadores serão adicionados aqui -->
+        </ul>
       </nav>
       <div class="contatos-container">
         <h1 class="contatos-titulo">Lixeira (0)</h1>
@@ -63,5 +67,19 @@
         <div class="contato-conteudo" id="lista-contatos"></div>
       </div>
     </main>
+    <div id="modal-marcador" class="modal-marcador">
+      <div class="modal-conteudo">
+        <h3>Novo Marcador</h3>
+        <input
+          type="text"
+          id="input-novo-marcador"
+          placeholder="Nome do marcador"
+        />
+        <div class="modal-botoes">
+          <button id="btn-salvar-novo-marcador">Salvar</button>
+          <button id="btn-cancelar-marcador">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

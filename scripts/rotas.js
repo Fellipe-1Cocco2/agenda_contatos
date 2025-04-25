@@ -49,4 +49,10 @@ export function definirRotas(app) {
   app.get("/contato/:id", (req, res) => {
     res.sendFile(path.join(__dirname, "../public/pages/contato.html"));
   });
+
+  app.get("/marcadores/:id", (req, res) => {
+    res.sendFile(
+      path.join(__dirname, "../public/pages/contatos_marcador.html")
+    );
+  });
 }

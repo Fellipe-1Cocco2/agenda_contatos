@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../styles/reset.css" />
     <link rel="stylesheet" href="../styles/contato.css" />
     <script src="../scripts/ver_contato.js" defer></script>
+    <script src="../scripts/marcadores.js" defer></script>
     <title>Contato</title>
   </head>
   <body>
@@ -57,6 +58,9 @@
           <div class="nav-marcadores-texto">Marcadores</div>
           <img src="../imgs/mais.png" class="img-icons" />
         </div>
+        <ul id="lista-marcadores">
+          <!-- Marcadores serão adicionados aqui -->
+        </ul>
       </nav>
 
       <div class="contato-detalhado-container">
@@ -73,10 +77,19 @@
               <strong>Aniversário:</strong>
               <span id="aniversario-contato"></span>
             </p>
-            <button class="btn-favorito" data-favorito="false">
-              <img src="../imgs/estrela-vazia.png" alt="Favorito" />
-            </button>
+            <p>
+              <strong>Marcadores:</strong>
+              <ul id="lista-marcadores-contato" class="marcadores-contato-lista"></ul>
+            </p>
+            <div class="favoritar"><strong>Favoritar:</strong>
+              <button class="btn-favorito" data-favorito="false">
+                <img src="../imgs/estrela-vazia.png" alt="Favorito" />
+              </button>
+            </div>  
             <button id="btn-editar-contato">Editar</button>
+            <div><strong>Adicionar marcadores:</strong></div>
+            <div id="marcadores-checkboxes"></div>
+
           </div>
 
           <!-- Formulário de edição (inicialmente escondido) -->
@@ -107,5 +120,19 @@
         </div>
       </div>
     </main>
+    <div id="modal-marcador" class="modal-marcador">
+      <div class="modal-conteudo">
+        <h3>Novo Marcador</h3>
+        <input
+          type="text"
+          id="input-novo-marcador"
+          placeholder="Nome do marcador"
+        />
+        <div class="modal-botoes">
+          <button id="btn-salvar-novo-marcador">Salvar</button>
+          <button id="btn-cancelar-marcador">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -125,20 +125,54 @@ body {
   padding: 15px;
   font-weight: 700;
 }
-
 .img-icons {
   width: 15px;
   height: 15px;
 }
 
-.contato-detalhado-titulo {
+.contatos-titulo {
   font-size: 26px;
 }
 
-.contato-detalhado-container {
+.contatos-container {
   padding: 30px;
   width: 60%;
 }
+
+.contatos-cabecalho {
+  display: flex;
+  border-bottom: 1px solid var(--color-5);
+  gap: 25%;
+  padding: 20px 0px 10px 20px;
+}
+
+.cabecalho-cabeca {
+  color: var(--color-5);
+}
+
+.contato-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0px 10px 20px;
+}
+
+.contato-item-link {
+  display: flex;
+  text-decoration: none;
+  color: var(--color-5);
+}
+
+.contato-nome,
+.contato-email,
+.contato-telefone {
+  width: 30%;
+}
+
+.ativo {
+  background-color: var(--color-3); /* Azul, pode ajustar */
+}
+
 .btn-editar-marcador,
 .btn-editar-marcador img,
 .btn-excluir-marcador,
@@ -201,112 +235,4 @@ body {
   display: flex;
   justify-content: space-around;
   gap: 10px;
-}
-
-.contato-detalhado-container {
-  padding: 30px;
-  background-color: #ffffff; /* Cor de fundo branco */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra suave */
-  border-radius: 8px; /* Cantos arredondados */
-  width: 100%;
-}
-
-.contato-detalhado-titulo {
-  font-size: 28px;
-  font-weight: 600;
-  color: #202124; /* Cor do título similar ao Google Contatos */
-  margin-bottom: 20px;
-}
-#detalhes-contato-info {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-#detalhes-contato-info p {
-  font-size: 16px;
-  color: #5f6368; /* Cor dos textos */
-  margin: 8px 0;
-}
-
-.favoritar {
-  display: flex;
-  gap: 5px;
-}
-
-#detalhes-contato-info strong {
-  font-weight: 700;
-  color: #202124; /* Cor das labels */
-}
-
-#btn-editar-contato {
-  padding: 10px 0px;
-  background-color: #4285f4; /* Azul Google */
-  color: white;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px 0;
-  transition: background-color 0.3s ease;
-  width: 7%;
-}
-
-#btn-editar-contato:hover {
-  background-color: #357ae8; /* Cor de hover do Google */
-}
-
-.btn-favorito {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  width: 15px;
-  height: 15px;
-}
-
-.btn-favorito img {
-  width: 15px;
-  height: 15px;
-}
-
-#form-editar-contato {
-  margin-top: 20px;
-  padding: 20px;
-  background-color: #f1f3f4; /* Fundo do formulário */
-  border-radius: 8px;
-}
-
-#form-editar-contato h2 {
-  font-size: 24px;
-  font-weight: 600;
-  color: #202124;
-  margin-bottom: 15px;
-}
-
-#form-editar-contato input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 15px;
-  font-size: 16px;
-  border: 1px solid #dadce0;
-  border-radius: 5px;
-  background-color: #ffffff;
-}
-
-#form-editar-contato input:focus {
-  outline: none;
-  border-color: #4285f4;
-}
-
-#form-editar-contato button {
-  background-color: #34a853; /* Verde Google */
-  border-radius: 5px;
-  padding: 10px 20px;
-}
-
-#form-editar-contato button:hover {
-  background-color: #1c8e34; /* Hover verde */
 }

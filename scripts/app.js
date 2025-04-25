@@ -237,3 +237,142 @@ app.put("/favoritar-contato/:id", autenticarUsuario, async (req, res) => {
     res.status(500).json({ mensagem: "Erro ao atualizar favorito." });
   }
 });
+
+// Rota para buscar marcadores do usuário logado
+app.get("/marcadores", autenticarUsuario, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    res.json(user.marcadores || []);
+  } catch (error) {
+    console.error("Erro ao buscar marcadores:", error);
+    res.status(500).json({ mensagem: "Erro ao buscar marcadores." });
+  }
+});
+
+// Rota para criar um novo marcador
+app.post("/marcadores", autenticarUsuario, async (req, res) => {
+  const { nome } = req.body;
+
+  if (!nome || typeof nome !== "string" || !nome.trim()) {
+    return res.status(400).json({ mensagem: "Nome de marcador inválido." });
+  }
+
+  const marcador = nome.trim();
+
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    if (user.marcadores.includes(marcador)) {
+      return res.status(400).json({ mensagem: "Marcador já existe." });
+    }
+
+    user.marcadores.push(marcador);
+    await user.save();
+
+    res.status(201).json({ mensagem: "Marcador criado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao salvar marcador:", error);
+    res.status(500).json({ mensagem: "Erro ao salvar marcador." });
+  }
+});
+
+app.get("/api/marcadores", autenticarUsuario, async (req, res) => {
+  try {
+    const usuario = await User.findById(req.userId);
+    if (!usuario) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    res.json(usuario.marcadores || []);
+  } catch (error) {
+    console.error("Erro ao buscar marcadores:", error);
+    res.status(500).json({ mensagem: "Erro ao buscar marcadores." });
+  }
+});
+
+// Rota para buscar contatos filtrados por marcador
+app.get("/api/marcadores/:marcador", autenticarUsuario, async (req, res) => {
+  try {
+    const { marcador } = req.params;
+
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    const contatosMarcados = user.contatos.filter(
+      (contato) => contato.marcadores && contato.marcadores.includes(marcador)
+    );
+
+    // Sempre retorna um array, mesmo que vazio
+    res.json(contatosMarcados);
+  } catch (error) {
+    console.error("Erro ao buscar contatos filtrados por marcador:", error);
+    res.status(500).json({ mensagem: "Erro ao buscar contatos." });
+  }
+});
+
+app.put("/vincular-marcador/:id", autenticarUsuario, async (req, res) => {
+  try {
+    const { marcadorId, vincular } = req.body;
+
+    const user = await User.findById(req.userId);
+    if (!user)
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+
+    const contato = user.contatos.id(req.params.id);
+    if (!contato)
+      return res.status(404).json({ mensagem: "Contato não encontrado." });
+
+    // Buscar o marcador
+    let marcadorNome;
+
+    const marcadorObj = user.marcadores.find((m) => {
+      if (typeof m === "string") {
+        return m === marcadorId;
+      } else {
+        return m._id?.toString?.() === marcadorId || m.nome === marcadorId;
+      }
+    });
+
+    if (typeof marcadorObj === "string") {
+      marcadorNome = marcadorObj;
+    } else if (marcadorObj?.nome) {
+      marcadorNome = marcadorObj.nome;
+    }
+
+    if (!marcadorNome) {
+      return res.status(404).json({ mensagem: "Marcador não encontrado." });
+    }
+
+    if (vincular) {
+      const jaVinculado = contato.marcadores.some((m) => {
+        const nome = typeof m === "string" ? m : m.nome;
+        return nome === marcadorNome;
+      });
+
+      if (!jaVinculado) {
+        contato.marcadores.push(marcadorNome);
+      }
+    } else {
+      contato.marcadores = contato.marcadores.filter((m) => {
+        const nome = typeof m === "string" ? m : m.nome;
+        return nome !== marcadorNome;
+      });
+    }
+
+    await user.save();
+
+    res.json({ mensagem: "Marcador atualizado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao atualizar marcador:", error);
+    res.status(500).json({ mensagem: "Erro ao atualizar marcador." });
+  }
+});

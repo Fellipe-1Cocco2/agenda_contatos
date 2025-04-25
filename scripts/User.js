@@ -2,20 +2,25 @@ import mongoose from "mongoose";
 
 const contatoSchema = new mongoose.Schema({
   nome: { type: String, required: true },
-  sobrenome: { type: String, required: true }, // <-- AQUI!
+  sobrenome: { type: String, required: true },
   telefone: { type: String, required: true },
   email: { type: String },
   endereco: { type: String },
   aniversario: { type: Date },
   observacoes: { type: String },
   favorito: { type: Boolean, default: false },
+  marcadores: [String], // ← opcional: se quiser marcar contatos também
 });
 
-const User = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   nome: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   senha: { type: String, required: true },
   contatos: [contatoSchema],
+  marcadores: {
+    type: [String],
+    default: [],
+  },
 });
 
-export default mongoose.model("User", User);
+export default mongoose.model("User", userSchema);
