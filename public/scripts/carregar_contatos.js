@@ -13,11 +13,20 @@ document.addEventListener("DOMContentLoaded", async () => {
   listaContatos.innerHTML = "<p class='carregando-msg'>Carregando...</p>";
 
   try {
+    // Verifique se o token está sendo incluído no cabeçalho
+    console.log("Token enviado:", token);
+
     const res = await fetch("/api/contatos", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`, // Token incluído no cabeçalho Authorization
       },
     });
+
+    if (res.status === 401) {
+      alert("Token inválido ou expirado. Redirecionando para login...");
+      window.location.href = "/login";
+      return;
+    }
 
     const contatos = await res.json();
 

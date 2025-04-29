@@ -1,58 +1,44 @@
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import path from "path";
-let usuarioLogado = null;
+import { autenticarUsuario } from "./middleware/authMiddleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export function setUsuarioLogado(user) {
-  usuarioLogado = user;
-}
-
 export function definirRotas(app) {
-  // Servir index.html ao acessar a raiz
-  app.get("/", (req, res) => {
-    if (!usuarioLogado) {
-      return res.redirect("/login");
-    }
-    process.stdout.write("Usuário logado: " + usuarioLogado.email + "\n");
-    process.stdout.write("rota acessada /\n");
-    res.sendFile(path.join(__dirname, "../public/index.html"));
-  });
-
-  // Rota login
   app.get("/login", (req, res) => {
+    console.log("Acessando rota /login");
     res.sendFile(path.join(__dirname, "../public/pages/login.html"));
   });
 
-  // Rota favoritos
+  app.get("/", (req, res) => {
+    console.log("Acessando rota / (principal) sem autenticação.");
+    res.sendFile(path.join(__dirname, "../public/index.html"));
+  });
+
   app.get("/favoritos", (req, res) => {
+    console.log("Acessando rota /favoritos - deve passar pela autenticação");
     res.sendFile(path.join(__dirname, "../public/pages/favoritos.html"));
   });
 
-  // Rota lixeira
   app.get("/lixeira", (req, res) => {
+    console.log("Acessando rota /lixeira - deve passar pela autenticação");
     res.sendFile(path.join(__dirname, "../public/pages/lixeira.html"));
   });
 
-  // Rota Criar Contato
   app.get("/criar-contato", (req, res) => {
+    console.log("Acessando rota /criar-contato - deve passar pela autenticação");
     res.sendFile(path.join(__dirname, "../public/pages/criar_contato.html"));
   });
 
-  // Rota registrar
-  app.get("/register", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/pages/register.html"));
-  });
-
   app.get("/contato/:id", (req, res) => {
+    console.log("Acessando rota /contato/:id");
     res.sendFile(path.join(__dirname, "../public/pages/contato.html"));
   });
 
-  app.get("/marcadores/:id", (req, res) => {
-    res.sendFile(
-      path.join(__dirname, "../public/pages/contatos_marcador.html")
-    );
+  app.get("/admin", autenticarUsuario, (req, res) => {
+    console.log("Acessando rota /admin - deve passar pela autenticação");
+    res.sendFile(path.join(__dirname, "../public/pages/admin.html"));
   });
 }

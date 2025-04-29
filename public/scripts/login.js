@@ -29,31 +29,31 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   if (!valido) return;
 
   try {
-    const response = await fetch("/login", {
+    // >>> AQUI ALTERADO: de "/login" para "/api/auth/login"
+    const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, senha }),
+      body: JSON.stringify({ email, senha }), // Confirme que backend também usa "senha"
     });
 
     let data;
     try {
       data = await response.json();
     } catch (jsonError) {
-      data = {}; // fallback vazio se não for JSON válido
+      data = {}; // fallback vazio
     }
 
     if (!response.ok) {
       const mensagem = data?.message || "Email ou senha incorretos.";
 
-      // Exibir erro no campo correto
       if (mensagem.toLowerCase().includes("email")) {
         erroEmail.textContent = mensagem;
       } else if (mensagem.toLowerCase().includes("senha")) {
         erroSenha.textContent = mensagem;
       } else {
-        erroSenha.textContent = mensagem; // fallback geral
+        erroSenha.textContent = mensagem;
       }
 
       return;
@@ -63,6 +63,8 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     if (data.token) {
       localStorage.setItem("token", data.token);
       window.location.href = "/";
+    } else {
+      erroSenha.textContent = "Erro: token não recebido.";
     }
   } catch (error) {
     console.error("Erro ao fazer login:", error);

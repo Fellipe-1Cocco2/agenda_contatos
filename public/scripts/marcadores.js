@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
 
     try {
-      const res = await fetch("/marcadores", {
+      const res = await fetch("/api/marcadores", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function atualizarListaMarcadores() {
     const token = localStorage.getItem("token");
-    const res = await fetch("/marcadores", {
+    const res = await fetch("/api/marcadores", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
           );
           if (!novoNome || novoNome === marcador) return;
 
-          fetch(`/marcadores/${encodeURIComponent(marcador)}`, {
+          fetch(`/api/marcadores/${encodeURIComponent(marcador)}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           try {
             const delRes = await fetch(
-              `/marcadores/${encodeURIComponent(marcador)}`,
+              `/api/marcadores/${encodeURIComponent(marcador)}`,
               {
                 method: "DELETE",
                 headers: {
