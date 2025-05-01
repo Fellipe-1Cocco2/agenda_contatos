@@ -1,132 +1,198 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const contatoId = window.location.pathname.split("/")[2];
+document.addEventListener("DOMContentLoaded", async () => {
+  const urlParts = window.location.pathname.split("/");
+  const contatoId = urlParts[urlParts.length - 1];
 
-  function carregarDetalhesContato(id) {
-    const token = localStorage.getItem("token"); // Recuperando o token
+  const token = localStorage.getItem("token");
+  if (!token) return (window.location.href = "/login");
 
-    console.log("Token enviado:", token); // Verificando se o token está correto
+  try {
+    const resposta = await fetch(`/api/contatos/${contatoId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    fetch(`/api/contatos/${id}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,  // Enviando o token
-      },
-    })
-      .then((response) => {
-        console.log("Resposta da requisição:", response); // Verifique o status da resposta
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          const nomeCompleto = `${data.nome} ${data.sobrenome}`;
-          const nomeElemento = document.getElementById("nome-contato");
-          nomeElemento.textContent = nomeCompleto;
+    if (resposta.status === 401) return (window.location.href = "/login");
 
-          document.getElementById("telefone-contato").textContent = data.telefone || "Não disponível";
-          document.getElementById("email-contato").textContent = data.email || "Não disponível";
-          document.getElementById("aniversario-contato").textContent = data.aniversario || "Não disponível";
+    const contato = await resposta.json();
+    if (!contato) throw new Error("Contato não encontrado");
 
-          const listaMarcadores = document.getElementById("lista-marcadores-contato");
-          listaMarcadores.innerHTML = "";
-          if (data.marcadores && data.marcadores.length > 0) {
-            data.marcadores.forEach((marcador) => {
-              const li = document.createElement("li");
-              li.textContent = typeof marcador === "string" ? marcador : marcador?.nome || "(sem nome)";
-              listaMarcadores.appendChild(li);
-            });
-          } else {
-            const li = document.createElement("li");
-            li.textContent = "Nenhum marcador vinculado.";
-            listaMarcadores.appendChild(li);
-          }
+    document.getElementById("nome-contato").textContent =
+      `${contato.nome || ""} ${contato.sobrenome || ""}`.trim();
+    document.getElementById("telefone-contato").textContent = contato.telefone || "";
+    document.getElementById("email-contato").textContent = contato.email || "";
+    document.getElementById("aniversario-contato").textContent = contato.aniversario
+      ? new Date(contato.aniversario).toLocaleDateString("pt-BR")
+      : "";
 
-          const botaoFavorito = document.querySelector(".btn-favorito");
-          botaoFavorito.innerHTML = `<img src="${data.favorito ? "../imgs/estrela-cheia.png" : "../imgs/estrela-vazia.png"}" alt="Favorito" />`;
-          botaoFavorito.setAttribute("id", id);
-          botaoFavorito.setAttribute("data-favorito", data.favorito || false);
-        }
-      })
-      .catch((error) => {
-        console.error("Erro ao carregar detalhes do contato:", error);
-      });
+    const listaMarcadoresContato = document.getElementById("lista-marcadores-contato");
+    listaMarcadoresContato.innerHTML = "";
+    (contato.marcadores || []).forEach((m) => {
+      const li = document.createElement("li");
+      li.textContent = m;
+      listaMarcadoresContato.appendChild(li);
+    });
+
+    carregarCheckboxesMarcadores(contato);
+    configurarBotaoFavorito(contato);
+    preencherFormularioEdicao(contato);
+
+  } catch (error) {
+    console.error("Erro ao carregar o contato:", error);
   }
 
-  carregarDetalhesContato(contatoId);
-
-  document.getElementById("btn-editar-contato").addEventListener("click", function () {
-    document.getElementById("detalhes-contato-info").style.display = "none";
-    document.getElementById("form-editar-contato").style.display = "block";
-
-    document.getElementById("editar-nome").value = document.getElementById("nome-contato").textContent.split(" ")[0];
-    document.getElementById("editar-sobrenome").value = document.getElementById("nome-contato").textContent.split(" ")[1];
-    document.getElementById("editar-telefone").value = document.getElementById("telefone-contato").textContent;
-    document.getElementById("editar-email").value = document.getElementById("email-contato").textContent;
-    document.getElementById("editar-aniversario").value = document.getElementById("aniversario-contato").textContent;
+  const btnEditar = document.getElementById("btn-editar-contato");
+  const formEditar = document.getElementById("form-editar-contato");
+  btnEditar.addEventListener("click", () => {
+    formEditar.style.display = "block";
   });
 
-  document.getElementById("editar-contato-form").addEventListener("submit", function (e) {
+  const editarForm = document.getElementById("editar-contato-form");
+  editarForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const updatedContato = {
-      nome: document.getElementById("editar-nome").value,
-      sobrenome: document.getElementById("editar-sobrenome").value,
-      telefone: document.getElementById("editar-telefone").value,
-      email: document.getElementById("editar-email").value,
-      aniversario: document.getElementById("editar-aniversario").value,
-    };
+    const nomeInput = document.getElementById("editar-nome");
+    const sobrenomeInput = document.getElementById("editar-sobrenome");
+    const telefoneInput = document.getElementById("editar-telefone");
+    const emailInput = document.getElementById("editar-email");
+    const aniversarioInput = document.getElementById("editar-aniversario");
 
-    fetch(`/editar-contato/${contatoId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(updatedContato),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          return response.text().then((text) => {
-            throw new Error(text);
-          });
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data.mensagem) {
-          alert(data.mensagem);
-          window.location.href = `/contato/${contatoId}`;
-        }
-      })
-      .catch((error) => {
-        console.error("Erro ao atualizar contato:", error.message);
-        alert("Ocorreu um erro ao atualizar o contato.");
+    const nome = nomeInput.value;
+    const sobrenome = sobrenomeInput.value;
+    const telefone = telefoneInput.value;
+    const email = emailInput.value;
+    const aniversario = aniversarioInput.value;
+
+    try {
+      const resposta = await fetch(`/api/contatos/${contatoId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          nome,
+          sobrenome,
+          telefone,
+          email,
+          aniversario: aniversario || null,
+        }),
       });
-  });
 
-  document.querySelector(".btn-favorito").addEventListener("click", toggleFavorito);
+      if (!resposta.ok) throw new Error("Erro ao atualizar contato");
+
+      location.reload();
+    } catch (error) {
+      console.error("Erro ao atualizar contato:", error);
+    }
+  });
 });
 
-function toggleFavorito(e) {
-  const btn = e.currentTarget;
-  const contatoId = btn.id;
-  const atual = btn.dataset.favorito === "true";
-  const proximo = !atual;
+async function carregarCheckboxesMarcadores(contato) {
+  const container = document.getElementById("marcadores-checkboxes");
+  container.innerHTML = "";
 
-  btn.dataset.favorito = proximo;
-  const img = btn.querySelector("img");
-  img.src = proximo ? "../imgs/estrela-cheia.png" : "../imgs/estrela-vazia.png";
+  const token = localStorage.getItem("token");
+  if (!token) return;
 
-  fetch(`/favoritar-contato/${contatoId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-    body: JSON.stringify({ favorito: proximo }),
-  }).catch((err) => {
-    console.error("Erro ao favoritar:", err);
-    alert("Não foi possível atualizar o favorito.");
-    btn.dataset.favorito = atual;
-    img.src = atual ? "../imgs/estrela-cheia.png" : "../imgs/estrela-vazia.png";
+  try {
+    const resposta = await fetch("/api/marcadores", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const marcadores = await resposta.json();
+
+    marcadores.forEach((m) => {
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = `marcador-${m}`;
+      checkbox.checked = contato.marcadores.includes(m);
+      checkbox.addEventListener("change", () =>
+        atualizarMarcadorContato(contato._id, m, checkbox.checked)
+      );
+
+      const label = document.createElement("label");
+      label.htmlFor = checkbox.id;
+      label.textContent = m;
+
+      const div = document.createElement("div");
+      div.appendChild(checkbox);
+      div.appendChild(label);
+      container.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Erro ao carregar marcadores:", error);
+  }
+}
+
+async function atualizarMarcadorContato(contatoId, marcador, adicionar) {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    const resposta = await fetch(`/api/contatos/${contatoId}/marcadores`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ marcador, adicionar }),
+    });
+
+    if (resposta.status === 401) return (window.location.href = "/login");
+
+    if (!resposta.ok) {
+      const erro = await resposta.json();
+      throw new Error(erro.mensagem || "Erro ao atualizar marcador");
+    }
+
+    const resultado = await resposta.json();
+    console.log(resultado.mensagem);
+  } catch (error) {
+    console.error("Erro ao atualizar marcador:", error);
+  }
+}
+
+function configurarBotaoFavorito(contato) {
+  const btnFavorito = document.querySelector(".btn-favorito");
+  const icone = btnFavorito.querySelector("img");
+
+  const atualizarIcone = (favorito) => {
+    icone.src = favorito ? "../imgs/estrela.png" : "../imgs/estrela-vazia.png";
+    btnFavorito.dataset.favorito = favorito;
+  };
+
+  atualizarIcone(contato.favorito);
+
+  btnFavorito.addEventListener("click", async () => {
+    const novoStatus = btnFavorito.dataset.favorito !== "true";
+    const token = localStorage.getItem("token");
+
+    try {
+      const resposta = await fetch(`/api/contatos/${contato._id}/favorito`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ favorito: novoStatus }),
+      });
+
+      if (resposta.status === 401) return (window.location.href = "/login");
+
+      if (!resposta.ok) throw new Error("Erro ao atualizar favorito");
+
+      atualizarIcone(novoStatus);
+    } catch (error) {
+      console.error("Erro ao atualizar favorito:", error);
+    }
   });
+}
+
+function preencherFormularioEdicao(contato) {
+  document.getElementById("editar-nome").value = contato.nome || "";
+  document.getElementById("editar-sobrenome").value = contato.sobrenome || "";
+  document.getElementById("editar-telefone").value = contato.telefone || "";
+  document.getElementById("editar-email").value = contato.email || "";
+  document.getElementById("editar-aniversario").value = contato.aniversario
+    ? new Date(contato.aniversario).toISOString().split("T")[0]
+    : "";
 }

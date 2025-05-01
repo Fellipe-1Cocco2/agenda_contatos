@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         li.classList.add("item-marcador");
 
         const a = document.createElement("a");
-        a.href = `/marcadores/${encodeURIComponent(marcador)}`;
+        a.href = `/marcadores/${encodeURIComponent(marcador)}`; // Corrigido para apontar para a rota correta
         a.textContent = marcador;
         a.classList.add("menu-marcadores", "menu-link");
         if (marcador.toLowerCase() === marcadorAtual) {

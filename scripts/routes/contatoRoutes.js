@@ -38,19 +38,43 @@ router.post("/", autenticarUsuario, async (req, res) => {
   }
 });
 
-// Editar contato
-router.put("/:id", autenticarUsuario, async (req, res) => {
+// Atualizar Contato
+router.patch("/:id", autenticarUsuario, async (req, res) => {
+  const { id } = req.params;
+  const { nome, sobrenome, telefone, email, aniversario } = req.body;
+
   try {
-    const contato = req.user.contatos.id(req.params.id);
-    if (!contato) return res.status(404).json({ mensagem: "Contato não encontrado" });
+    // Verifica se o ID é válido
+    const contato = await User.findOne({ "contatos._id": id });
 
-    Object.assign(contato, req.body);
-    await req.user.save();
+    if (!contato) {
+      return res.status(404).json({ mensagem: "Contato não encontrado." });
+    }
 
-    res.json({ mensagem: "Contato atualizado com sucesso!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensagem: "Erro ao atualizar contato." });
+    const contatoAtualizado = contato.contatos.id(id);
+
+    if (nome) contatoAtualizado.nome = nome;
+    if (sobrenome) contatoAtualizado.sobrenome = sobrenome;
+    if (telefone) contatoAtualizado.telefone = telefone;
+    if (email) contatoAtualizado.email = email;
+
+    // Trata o aniversário
+    if (aniversario) {
+      const data = new Date(aniversario);
+      if (isNaN(data)) {
+        return res.status(400).json({ mensagem: "Data de aniversário inválida." });
+      }
+      // Corrige para UTC para evitar erro de fuso horário
+      data.setUTCHours(12); 
+      contatoAtualizado.aniversario = data;
+    }
+
+    await contato.save();
+    res.json({ mensagem: "Contato atualizado com sucesso." });
+
+  } catch (erro) {
+    console.error("Erro ao atualizar contato:", erro);
+    res.status(500).json({ mensagem: "Erro ao atualizar contato", erro: erro.message });
   }
 });
 
@@ -69,5 +93,64 @@ router.delete("/:id", autenticarUsuario, async (req, res) => {
     res.status(500).json({ mensagem: "Erro ao deletar contato." });
   }
 });
+
+// Exemplo usando Express.js
+router.patch("api/contatos/:id/favorito", autenticarUsuario, async (req, res) => {
+  const contatoId = req.params.id;
+  const { favorito } = req.body;
+
+  try {
+    const contato = await Contato.findById(contatoId);
+    if (!contato) {
+      return res.status(404).json({ mensagem: "Contato não encontrado" });
+    }
+
+    contato.favorito = favorito;
+    await contato.save();
+
+    res.json({ mensagem: "Favorito atualizado com sucesso" });
+  } catch (error) {
+    res.status(500).json({ mensagem: "Erro ao atualizar favorito", erro: error.message });
+  }
+});
+
+// Atualizar marcadores de um contato
+router.patch("/:id/marcadores", autenticarUsuario, async (req, res) => {
+  const { id } = req.params;
+  const { marcadores } = req.body;
+
+  if (!Array.isArray(marcadores)) {
+    return res.status(400).json({ mensagem: "Marcadores devem ser um array." });
+  }
+
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+    }
+
+    const contato = user.contatos.id(id);
+    if (!contato) {
+      return res.status(404).json({ mensagem: "Contato não encontrado." });
+    }
+
+    contato.marcadores = marcadores;
+    await user.save();
+
+    res.json({ mensagem: "Marcadores atualizados com sucesso." });
+  } catch (error) {
+    console.error("Erro ao atualizar marcadores:", error);
+    res.status(500).json({ mensagem: "Erro interno ao atualizar marcadores." });
+  }
+});
+
+router.get('/api/contatos/:id', async (req, res) => {
+  const contato = await Contato.findById(req.params.id);
+  if (!contato) {
+    return res.status(404).json({ mensagem: 'Contato não encontrado' });
+  }
+  res.json(contato);
+});
+
 
 export default router;

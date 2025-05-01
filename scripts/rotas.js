@@ -36,6 +36,10 @@ export function definirRotas(app) {
     console.log("Acessando rota /contato/:id");
     res.sendFile(path.join(__dirname, "../public/pages/contato.html"));
   });
+  app.get("/marcadores/:id", (req, res) => {
+    console.log("Acessando rota /contato/:id");
+    res.sendFile(path.join(__dirname, "../public/pages/contatos_marcador.html"));
+  });
 
   app.get("/admin", autenticarUsuario, (req, res) => {
     console.log("Acessando rota /admin - deve passar pela autenticação");
