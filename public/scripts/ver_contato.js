@@ -15,15 +15,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     const contato = await resposta.json();
     if (!contato) throw new Error("Contato não encontrado");
 
-    document.getElementById("nome-contato").textContent =
-      `${contato.nome || ""} ${contato.sobrenome || ""}`.trim();
-    document.getElementById("telefone-contato").textContent = contato.telefone || "";
+    document.getElementById("nome-contato").textContent = `${
+      contato.nome || ""
+    } ${contato.sobrenome || ""}`.trim();
+    document.getElementById("telefone-contato").textContent =
+      contato.telefone || "";
     document.getElementById("email-contato").textContent = contato.email || "";
-    document.getElementById("aniversario-contato").textContent = contato.aniversario
-      ? new Date(contato.aniversario).toLocaleDateString("pt-BR")
-      : "";
+    document.getElementById("aniversario-contato").textContent =
+      contato.aniversario
+        ? new Date(contato.aniversario).toLocaleDateString("pt-BR")
+        : "";
 
-    const listaMarcadoresContato = document.getElementById("lista-marcadores-contato");
+    const listaMarcadoresContato = document.getElementById(
+      "lista-marcadores-contato"
+    );
     listaMarcadoresContato.innerHTML = "";
     (contato.marcadores || []).forEach((m) => {
       const li = document.createElement("li");
@@ -34,15 +39,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     carregarCheckboxesMarcadores(contato);
     configurarBotaoFavorito(contato);
     preencherFormularioEdicao(contato);
-
   } catch (error) {
     console.error("Erro ao carregar o contato:", error);
   }
 
   const btnEditar = document.getElementById("btn-editar-contato");
   const formEditar = document.getElementById("form-editar-contato");
+  const infosContato = document.getElementById("detalhes-contato-info");
   btnEditar.addEventListener("click", () => {
     formEditar.style.display = "block";
+    infosContato.style.display = "none";
   });
 
   const editarForm = document.getElementById("editar-contato-form");
@@ -156,7 +162,9 @@ function configurarBotaoFavorito(contato) {
   const icone = btnFavorito.querySelector("img");
 
   const atualizarIcone = (favorito) => {
-    icone.src = favorito ? "../imgs/estrela.png" : "../imgs/estrela-vazia.png";
+    icone.src = favorito
+      ? "../imgs/estrela-cheia.png"
+      : "../imgs/estrela-vazia.png";
     btnFavorito.dataset.favorito = favorito;
   };
 
@@ -196,3 +204,35 @@ function preencherFormularioEdicao(contato) {
     ? new Date(contato.aniversario).toISOString().split("T")[0]
     : "";
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnExcluirContato = document.getElementById("btn-excluir-contato");
+  const contatoId = window.location.pathname.split("/").pop();
+  const token = localStorage.getItem("token");
+
+  btnExcluirContato.addEventListener("click", async () => {
+    const confirmar = confirm(
+      "Tem certeza que deseja mover este contato para a lixeira?"
+    );
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`/api/contatos/${contatoId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        alert("Contato movido para a lixeira.");
+        window.location.href = "/"; // ou para a lista de contatos
+      } else {
+        alert("Erro ao mover contato para a lixeira.");
+      }
+    } catch (err) {
+      console.error("Erro ao excluir contato:", err);
+      alert("Erro de conexão.");
+    }
+  });
+});

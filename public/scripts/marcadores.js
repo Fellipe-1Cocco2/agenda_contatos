@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (!novoNome || novoNome === marcador) return;
 
           fetch(`/api/marcadores/${encodeURIComponent(marcador)}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,

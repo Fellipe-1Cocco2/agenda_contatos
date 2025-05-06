@@ -10,12 +10,15 @@ const contatoSchema = new mongoose.Schema({
   observacoes: { type: String },
   favorito: { type: Boolean, default: false },
   marcadores: [String], // ← opcional: se quiser marcar contatos também
+  lixeira: { type: Boolean, default: false },
+  dataRemocao: { type: Date, default: null },
 });
 
 const userSchema = new mongoose.Schema({
   nome: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   senha: { type: String, required: true },
+  fotoPerfil: { type: String, default: "default.png" },
   contatos: [contatoSchema],
   marcadores: {
     type: [String],

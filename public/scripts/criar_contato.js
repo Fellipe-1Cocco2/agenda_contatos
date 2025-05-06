@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const token = localStorage.getItem("token");
 
     try {
-      const resposta = await fetch("/criar-contato", {
+      const resposta = await fetch("/api/contatos/criar-contato", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -4,11 +4,70 @@ import User from "../models/User.js";
 
 const router = express.Router();
 
-// Buscar contatos
+// Listar contatos (ignorar os que estão na lixeira)
 router.get("/", autenticarUsuario, async (req, res) => {
-  const user = await User.findById(req.userId);
-  if (!user) return res.status(404).json({ mensagem: "Usuário não encontrado" });
-  res.json(user.contatos);
+  try {
+    const user = await User.findById(req.userId);
+
+    const contatosVisiveis = user.contatos.filter((c) => !c.lixeira);
+
+    res.json(contatosVisiveis);
+  } catch (err) {
+    console.error("Erro ao buscar contatos:", err);
+    res.status(500).json({ mensagem: "Erro ao buscar contatos" });
+  }
+});
+
+// Rota para buscar contatos na lixeira
+router.get("/lixeira", autenticarUsuario, async (req, res) => {
+  try {
+    console.log("Chegou na rota GET /api/contatos/lixeira");
+
+    const userId = req.user.id; // Supondo que o ID do usuário está disponível após a autenticação
+    console.log("User ID:", userId); // Verificando o ID do usuário
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      console.log("Usuário não encontrado");
+      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+    }
+
+    console.log("Usuário encontrado:", user);
+
+    // Filtra os contatos que estão na lixeira (campo lixeira: true)
+    const contatosLixeira = user.contatos.filter((contato) => contato.lixeira);
+    console.log("Contatos na lixeira:", contatosLixeira);
+
+    return res.json(contatosLixeira);
+  } catch (error) {
+    console.error("Erro ao buscar contatos na lixeira:", error);
+    return res
+      .status(500)
+      .json({ mensagem: "Erro ao buscar contatos na lixeira" });
+  }
+});
+
+// Restaurar contato da lixeira
+router.patch("/:id/restaurar", autenticarUsuario, async (req, res) => {
+  try {
+    const contato = req.user.contatos.id(req.params.id);
+
+    if (!contato || !contato.lixeira) {
+      return res
+        .status(404)
+        .json({ mensagem: "Contato não encontrado na lixeira." });
+    }
+
+    contato.lixeira = false;
+    contato.dataRemocao = null;
+
+    await req.user.save();
+    res.status(200).json({ mensagem: "Contato restaurado com sucesso." });
+  } catch (error) {
+    console.error("Erro ao restaurar contato:", error);
+    res.status(500).json({ mensagem: "Erro ao restaurar contato." });
+  }
 });
 
 // Buscar contato específico
@@ -16,7 +75,8 @@ router.get("/:id", autenticarUsuario, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     const contato = user.contatos.id(req.params.id);
-    if (!contato) return res.status(404).json({ mensagem: "Contato não encontrado" });
+    if (!contato)
+      return res.status(404).json({ mensagem: "Contato não encontrado" });
     res.json(contato);
   } catch (error) {
     console.error(error);
@@ -25,7 +85,7 @@ router.get("/:id", autenticarUsuario, async (req, res) => {
 });
 
 // Criar contato
-router.post("/", autenticarUsuario, async (req, res) => {
+router.post("/criar-contato", autenticarUsuario, async (req, res) => {
   try {
     const { nome, sobrenome, telefone, email, aniversario } = req.body;
     const novoContato = { nome, sobrenome, telefone, email, aniversario };
@@ -62,95 +122,123 @@ router.patch("/:id", autenticarUsuario, async (req, res) => {
     if (aniversario) {
       const data = new Date(aniversario);
       if (isNaN(data)) {
-        return res.status(400).json({ mensagem: "Data de aniversário inválida." });
+        return res
+          .status(400)
+          .json({ mensagem: "Data de aniversário inválida." });
       }
       // Corrige para UTC para evitar erro de fuso horário
-      data.setUTCHours(12); 
+      data.setUTCHours(12);
       contatoAtualizado.aniversario = data;
     }
 
     await contato.save();
     res.json({ mensagem: "Contato atualizado com sucesso." });
-
   } catch (erro) {
     console.error("Erro ao atualizar contato:", erro);
-    res.status(500).json({ mensagem: "Erro ao atualizar contato", erro: erro.message });
-  }
-});
-
-// Deletar contato
-router.delete("/:id", autenticarUsuario, async (req, res) => {
-  try {
-    const contato = req.user.contatos.id(req.params.id);
-    if (!contato) return res.status(404).json({ mensagem: "Contato não encontrado" });
-
-    contato.remove();
-    await req.user.save();
-
-    res.json({ mensagem: "Contato deletado com sucesso!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensagem: "Erro ao deletar contato." });
+    res
+      .status(500)
+      .json({ mensagem: "Erro ao atualizar contato", erro: erro.message });
   }
 });
 
 // Exemplo usando Express.js
-router.patch("api/contatos/:id/favorito", autenticarUsuario, async (req, res) => {
+router.patch("/:id/favorito", autenticarUsuario, async (req, res) => {
   const contatoId = req.params.id;
   const { favorito } = req.body;
 
   try {
-    const contato = await Contato.findById(contatoId);
+    const user = await User.findById(req.userId);
+    if (!user)
+      return res.status(404).json({ mensagem: "Usuário não encontrado" });
+
+    const contato = user.contatos.id(contatoId);
     if (!contato) {
       return res.status(404).json({ mensagem: "Contato não encontrado" });
     }
 
     contato.favorito = favorito;
-    await contato.save();
+    await user.save();
 
     res.json({ mensagem: "Favorito atualizado com sucesso" });
   } catch (error) {
-    res.status(500).json({ mensagem: "Erro ao atualizar favorito", erro: error.message });
+    console.error("Erro ao atualizar favorito:", error);
+    res
+      .status(500)
+      .json({ mensagem: "Erro ao atualizar favorito", erro: error.message });
   }
 });
 
-// Atualizar marcadores de um contato
 router.patch("/:id/marcadores", autenticarUsuario, async (req, res) => {
   const { id } = req.params;
-  const { marcadores } = req.body;
+  const { marcador, adicionar } = req.body;
 
-  if (!Array.isArray(marcadores)) {
-    return res.status(400).json({ mensagem: "Marcadores devem ser um array." });
+  if (typeof marcador !== "string" || typeof adicionar !== "boolean") {
+    return res.status(400).json({ mensagem: "Dados inválidos" });
   }
 
   try {
     const user = await User.findById(req.userId);
-    if (!user) {
-      return res.status(404).json({ mensagem: "Usuário não encontrado." });
-    }
+    if (!user)
+      return res.status(404).json({ mensagem: "Usuário não encontrado" });
 
     const contato = user.contatos.id(id);
-    if (!contato) {
-      return res.status(404).json({ mensagem: "Contato não encontrado." });
+    if (!contato)
+      return res.status(404).json({ mensagem: "Contato não encontrado" });
+
+    if (adicionar && !contato.marcadores.includes(marcador)) {
+      contato.marcadores.push(marcador);
+    } else if (!adicionar) {
+      contato.marcadores = contato.marcadores.filter((m) => m !== marcador);
     }
 
-    contato.marcadores = marcadores;
     await user.save();
-
     res.json({ mensagem: "Marcadores atualizados com sucesso." });
   } catch (error) {
     console.error("Erro ao atualizar marcadores:", error);
     res.status(500).json({ mensagem: "Erro interno ao atualizar marcadores." });
   }
 });
+// Excluir permanentemente um contato da lixeira
+router.delete("/excluir/lixeira", autenticarUsuario, async (req, res) => {
+  try {
+    // Filtra e mantém apenas os contatos que NÃO estão na lixeira
+    req.user.contatos = req.user.contatos.filter((contato) => !contato.lixeira);
+    await req.user.save();
 
-router.get('/api/contatos/:id', async (req, res) => {
-  const contato = await Contato.findById(req.params.id);
-  if (!contato) {
-    return res.status(404).json({ mensagem: 'Contato não encontrado' });
+    res.json({ mensagem: "Lixeira esvaziada com sucesso." });
+  } catch (error) {
+    console.error("Erro ao esvaziar lixeira:", error);
+    res.status(500).json({ mensagem: "Erro ao esvaziar lixeira." });
   }
-  res.json(contato);
 });
 
+// Mover contato para a lixeira
+router.delete("/:id", autenticarUsuario, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await User.findById(req.userId);
+    const contato = user.contatos.id(id);
+
+    if (!contato) {
+      return res.status(404).json({ mensagem: "Contato não encontrado." });
+    }
+
+    // Marcar como excluído (lixeira)
+    contato.lixeira = true;
+    contato.dataRemocao = new Date();
+
+    // Remover marcadores e favorito
+    contato.favorito = false;
+    contato.marcadores = [];
+
+    await user.save();
+
+    res.status(200).json({ mensagem: "Contato movido para a lixeira." });
+  } catch (err) {
+    console.error("Erro ao mover para a lixeira:", err);
+    res.status(500).json({ mensagem: "Erro ao mover para a lixeira." });
+  }
+});
 
 export default router;

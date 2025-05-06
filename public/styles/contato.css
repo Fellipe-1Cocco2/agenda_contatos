@@ -229,7 +229,15 @@ body {
   margin: 8px 0;
 }
 
-.favoritar {
+.botoes {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+}
+
+.favoritar,
+.excluir,
+.editar {
   display: flex;
   gap: 5px;
 }
@@ -239,24 +247,9 @@ body {
   color: #202124; /* Cor das labels */
 }
 
-#btn-editar-contato {
-  padding: 10px 0px;
-  background-color: #4285f4; /* Azul Google */
-  color: white;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin: 10px 0;
-  transition: background-color 0.3s ease;
-  width: 7%;
-}
-
-#btn-editar-contato:hover {
-  background-color: #357ae8; /* Cor de hover do Google */
-}
-
-.btn-favorito {
+.btn-favorito,
+.btn-editar,
+.btn-danger {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -267,7 +260,9 @@ body {
   height: 15px;
 }
 
-.btn-favorito img {
+.btn-favorito img,
+.btn-danger img,
+.btn-editar img {
   width: 15px;
   height: 15px;
 }
@@ -275,7 +270,7 @@ body {
 #form-editar-contato {
   margin-top: 20px;
   padding: 20px;
-  background-color: #f1f3f4; /* Fundo do formulário */
+  background-color: var(--color-6); /* Fundo do formulário */
   border-radius: 8px;
 }
 
@@ -291,22 +286,22 @@ body {
   padding: 10px;
   margin-bottom: 15px;
   font-size: 16px;
-  border: 1px solid #dadce0;
+  border: 1px solid var(--color-6);
   border-radius: 5px;
-  background-color: #ffffff;
+  background-color: var(--color-6);
 }
 
 #form-editar-contato input:focus {
   outline: none;
-  border-color: #4285f4;
+  border-color: var(--color-3);
 }
 
 #form-editar-contato button {
-  background-color: #34a853; /* Verde Google */
+  background-color: var(--color-3); /* Verde Google */
   border-radius: 5px;
   padding: 10px 20px;
 }
 
 #form-editar-contato button:hover {
-  background-color: #1c8e34; /* Hover verde */
+  background-color: var(--color-1); /* Hover verde */
 }

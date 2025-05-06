@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="../styles/reset.css" />
     <link rel="stylesheet" href="../styles/lixeira.css" />
     <script src="../scripts/marcadores.js" defer></script>
+    <script src="../scripts/carregar_ctt_lixeira.js" defer></script>
     <title>Lixeira</title>
   </head>
   <body>
@@ -58,6 +59,13 @@
         </ul>
       </nav>
       <div class="contatos-container">
+        <div class="texto-excluir">
+          Os contatos que estão na lixeira há mais de 30 dias serão excluídos
+          definitivamente
+          <button class="btn-excluir" id="btn-esvaziar-lixeira">
+            Esvaziar a lixeira agora
+          </button>
+        </div>
         <h1 class="contatos-titulo">Lixeira (0)</h1>
         <div class="contatos-cabecalho">
           <div class="cabecalho-nome cabecalho-cabeca">Nome</div>

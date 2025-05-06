@@ -1,76 +1,96 @@
-document.getElementById("loginForm").addEventListener("submit", async function (event) {
-  event.preventDefault();
+// Função para remover contatos na lixeira há mais de 30 dias
 
-  const email = document.getElementById("email").value.trim();
-  const senha = document.getElementById("password").value;
+async function limparLixeiraAntiga(user) {
+  const agora = new Date();
+  const limite = new Date(agora.setDate(agora.getDate() - 30));
 
-  const erroEmail = document.getElementById("erro-email");
-  const erroSenha = document.getElementById("erro-senha");
+  user.contatos = user.contatos.filter((contato) => {
+    return !(
+      contato.lixeira &&
+      contato.dataRemocao &&
+      new Date(contato.dataRemocao) < limite
+    );
+  });
 
-  // Limpa mensagens anteriores
-  erroEmail.textContent = "";
-  erroSenha.textContent = "";
+  await user.save();
+}
 
-  let valido = true;
+document
+  .getElementById("loginForm")
+  .addEventListener("submit", async function (event) {
+    event.preventDefault();
 
-  if (email === "") {
-    erroEmail.textContent = "O e-mail é obrigatório.";
-    valido = false;
-  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    erroEmail.textContent = "Informe um e-mail válido.";
-    valido = false;
-  }
+    const email = document.getElementById("email").value.trim();
+    const senha = document.getElementById("password").value;
 
-  if (senha === "") {
-    erroSenha.textContent = "A senha é obrigatória.";
-    valido = false;
-  }
+    const erroEmail = document.getElementById("erro-email");
+    const erroSenha = document.getElementById("erro-senha");
 
-  if (!valido) return;
+    // Limpa mensagens anteriores
+    erroEmail.textContent = "";
+    erroSenha.textContent = "";
 
-  try {
-    // >>> AQUI ALTERADO: de "/login" para "/api/auth/login"
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, senha }), // Confirme que backend também usa "senha"
-    });
+    let valido = true;
 
-    let data;
-    try {
-      data = await response.json();
-    } catch (jsonError) {
-      data = {}; // fallback vazio
+    if (email === "") {
+      erroEmail.textContent = "O e-mail é obrigatório.";
+      valido = false;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      erroEmail.textContent = "Informe um e-mail válido.";
+      valido = false;
     }
 
-    if (!response.ok) {
-      const mensagem = data?.message || "Email ou senha incorretos.";
+    if (senha === "") {
+      erroSenha.textContent = "A senha é obrigatória.";
+      valido = false;
+    }
 
-      if (mensagem.toLowerCase().includes("email")) {
-        erroEmail.textContent = mensagem;
-      } else if (mensagem.toLowerCase().includes("senha")) {
-        erroSenha.textContent = mensagem;
-      } else {
-        erroSenha.textContent = mensagem;
+    if (!valido) return;
+
+    try {
+      // >>> AQUI ALTERADO: de "/login" para "/api/auth/login"
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, senha }), // Confirme que backend também usa "senha"
+      });
+
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        data = {}; // fallback vazio
       }
 
-      return;
-    }
+      if (!response.ok) {
+        const mensagem = data?.message || "Email ou senha incorretos.";
 
-    // Login bem-sucedido
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-      window.location.href = "/";
-    } else {
-      erroSenha.textContent = "Erro: token não recebido.";
+        if (mensagem.toLowerCase().includes("email")) {
+          erroEmail.textContent = mensagem;
+        } else if (mensagem.toLowerCase().includes("senha")) {
+          erroSenha.textContent = mensagem;
+        } else {
+          erroSenha.textContent = mensagem;
+        }
+
+        return;
+      }
+
+      // Login bem-sucedido
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+        window.location.href = "/";
+        await limparLixeiraAntiga(user);
+      } else {
+        erroSenha.textContent = "Erro: token não recebido.";
+      }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      erroSenha.textContent = "Erro ao conectar com o servidor.";
     }
-  } catch (error) {
-    console.error("Erro ao fazer login:", error);
-    erroSenha.textContent = "Erro ao conectar com o servidor.";
-  }
-});
+  });
 
 document.getElementById("btn-cadastrar").addEventListener("click", () => {
   window.location.href = "/register";

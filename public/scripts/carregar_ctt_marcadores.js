@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const marcador = window.location.pathname.split("/")[2]; // Pega o marcador da URL
+  const marcador = decodeURIComponent(window.location.pathname.split("/")[2]);
   const token = localStorage.getItem("token");
 
   const container = document.querySelector(".contatos-container");

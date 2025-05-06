@@ -165,6 +165,29 @@ body {
   align-items: center;
 }
 
+.contato-conteudo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 0px 10px 20px;
+}
+
+.contato {
+  display: flex;
+}
+
+.contato-item-link {
+  display: flex;
+  text-decoration: none;
+  color: var(--color-5);
+}
+
+.contato-nome,
+.contato-email,
+.contato-telefone {
+  width: 30%;
+}
+
 .item-marcador {
   display: flex;
   align-items: center;

@@ -7,6 +7,7 @@ import { definirRotas } from "./rotas.js";
 import authRoutes from "./routes/authRoutes.js";
 import contatoRoutes from "./routes/contatoRoutes.js";
 import marcadorRoutes from "./routes/marcadorRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 
@@ -27,11 +28,13 @@ definirRotas(app);
 app.use("/api/auth", authRoutes);
 app.use("/api/contatos", contatoRoutes);
 app.use("/api/marcadores", marcadorRoutes);
+app.use("/api/usuario", userRoutes);
 
 console.log("Rotas configuradas.");
 
 // Conexão MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("Conectado ao MongoDB"))
   .catch((err) => console.error("Erro ao conectar MongoDB:", err));
 

@@ -51,10 +51,11 @@ router.post("/login", async (req, res) => {
 
     // Retorna o token como resposta
     res.json({ token });
-
   } catch (error) {
     console.error("Erro no login:", error);
-    res.status(500).json({ message: "Erro no servidor. Tente novamente mais tarde." });
+    res
+      .status(500)
+      .json({ message: "Erro no servidor. Tente novamente mais tarde." });
   }
 });
 
