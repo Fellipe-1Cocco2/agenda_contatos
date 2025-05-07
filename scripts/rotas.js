@@ -12,6 +12,11 @@ export function definirRotas(app) {
     res.sendFile(path.join(__dirname, "../public/pages/login.html"));
   });
 
+  app.get("/register", (req, res) => {
+    console.log("Acessando rota /register");
+    res.sendFile(path.join(__dirname, "../public/pages/register.html"));
+  });
+
   app.get("/", (req, res) => {
     console.log("Acessando rota / (principal) sem autenticação.");
     res.sendFile(path.join(__dirname, "../public/index.html"));
@@ -28,7 +33,9 @@ export function definirRotas(app) {
   });
 
   app.get("/criar-contato", (req, res) => {
-    console.log("Acessando rota /criar-contato - deve passar pela autenticação");
+    console.log(
+      "Acessando rota /criar-contato - deve passar pela autenticação"
+    );
     res.sendFile(path.join(__dirname, "../public/pages/criar_contato.html"));
   });
 
@@ -38,7 +45,9 @@ export function definirRotas(app) {
   });
   app.get("/marcadores/:id", (req, res) => {
     console.log("Acessando rota /contato/:id");
-    res.sendFile(path.join(__dirname, "../public/pages/contatos_marcador.html"));
+    res.sendFile(
+      path.join(__dirname, "../public/pages/contatos_marcador.html")
+    );
   });
 
   app.get("/admin", autenticarUsuario, (req, res) => {

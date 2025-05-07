@@ -7,52 +7,74 @@
     <link rel="stylesheet" href="../styles/lixeira.css" />
     <script src="../scripts/marcadores.js" defer></script>
     <script src="../scripts/carregar_ctt_lixeira.js" defer></script>
+    <script src="../scripts/autenticacao.js" defer></script>
+    <script src="../scripts/logoff.js" defer></script>
+    <script src="../scripts/modaluser.js" defer></script>
+    <script src="../scripts/autocomplete.js" defer></script>
     <title>Lixeira</title>
   </head>
   <body>
     <header class="header-container">
       <div class="header-inicio">
-        <img src="./imgs/menu-aberto.png" class="inicio-icon_menu" />
-        <img src="./imgs/agenda.png" class="inicio-icon_agenda" />
+        <img src="../imgs/menu-aberto.png" class="inicio-icon_menu" />
+        <img src="../imgs/agenda.png" class="inicio-icon_agenda" />
         <div class="inicio-text_contato">Contatos</div>
       </div>
-      <div class="header-pesquisa">
-        <img src="./imgs/lupa.png" class="pesquisa-icon_pesquisa" />
-        <input
-          id="pesquisa"
-          class="input-pesquisa"
-          type="text"
-          placeholder="Pesquisar"
-        />
+      <div class="header-pesquisa" id="header-pesquisa">
+        <div class="header-pesquisa-conteudo">
+          <img src="../imgs/lupa.png" class="pesquisa-icon_pesquisa" />
+          <input
+            id="pesquisa"
+            class="input-pesquisa"
+            type="text"
+            placeholder="Pesquisar"
+          />
+        </div>
+        <ul id="resultado-pesquisa" class="resultado-pesquisa"></ul>
       </div>
       <div class="header-confg_perfil">
-        <img src="./imgs/configuracoes.png" class="confg_perfil-icon_config" />
-        <img src="./imgs/perfil.png" class="confg_perfil-icon_perfil" />
+        <button id="abrir-configuracoes" class="icone-config">
+          <img
+            src="../imgs/configuracoes.png"
+            class="confg_perfil-icon_config"
+          />
+        </button>
+        <div class="perfil-container">
+          <img
+            id="img-perfil"
+            src="../imgs/perfil.png"
+            class="confg_perfil-icon_perfil"
+          />
+          <button id="btn-logout">Logoff</button>
+        </div>
       </div>
     </header>
     <main class="main-container">
       <nav class="nav-container">
         <a href="/criar-contato" class="nav-link-criar_contato">
-          <img src="./imgs/mais.png" class="link-criar_contato-img img-icons" />
+          <img
+            src="../imgs/mais.png"
+            class="link-criar_contato-img img-icons"
+          />
           <div class="link-criar_contato-texto">Criar contato</div>
         </a>
         <div class="nav-menu">
           <a href="/" class="menu-contatos menu-link">
-            <img class="img-icons" src="./imgs/contato.png" />
+            <img class="img-icons" src="../imgs/contato.png" />
             <div class="menu-contatos-texto">Contatos</div>
           </a>
           <a href="/favoritos" class="menu-favoritos menu-link">
-            <img class="img-icons" src="./imgs/estrela.png" />
+            <img class="img-icons" src="../imgs/estrela.png" />
             <div class="menu-favoritos-texto">Favoritos</div>
           </a>
           <a href="/lixeira" class="menu-lixeira menu-link">
-            <img class="img-icons" src="./imgs/lixeira.png" />
+            <img class="img-icons" src="../imgs/lixeira.png" />
             <div class="menu-lixeira-texto">Lixeira</div>
           </a>
         </div>
         <div class="nav-marcadores">
           <div class="nav-marcadores-texto">Marcadores</div>
-          <img src="./imgs/mais.png" class="img-icons" />
+          <img src="../imgs/mais.png" class="img-icons" />
         </div>
         <ul id="lista-marcadores">
           <!-- Marcadores serão adicionados aqui -->
@@ -75,6 +97,7 @@
         <div class="contato-conteudo" id="lista-contatos"></div>
       </div>
     </main>
+    <!-- modal marcador -->
     <div id="modal-marcador" class="modal-marcador">
       <div class="modal-conteudo">
         <h3>Novo Marcador</h3>
@@ -87,6 +110,55 @@
           <button id="btn-salvar-novo-marcador">Salvar</button>
           <button id="btn-cancelar-marcador">Cancelar</button>
         </div>
+      </div>
+    </div>
+    <!-- modal user -->
+    <div id="modal-configuracoes" class="modal hidden">
+      <div class="modal-content">
+        <span id="fechar-modal" class="close">&times;</span>
+        <h2>Configurações da Conta</h2>
+
+        <form id="form-configuracoes" enctype="multipart/form-data">
+          <div class="foto-preview">
+            <img
+              id="foto-perfil-preview"
+              src="/uploads/default.png"
+              alt="Foto de perfil"
+            />
+            <input type="file" id="foto-perfil" name="foto" accept="image/*" />
+          </div>
+
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+
+          <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Nova senha (opcional)"
+            />
+          </div>
+
+          <button type="submit" class="btn-salvar">Salvar alterações</button>
+        </form>
+
+        <hr />
+
+        <h3>Visual</h3>
+        <label class="switch">
+          <input type="checkbox" id="toggle-tema" />
+          <span class="slider round"></span>
+          Tema escuro
+        </label>
       </div>
     </div>
   </body>

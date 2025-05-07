@@ -1,11 +1,21 @@
+/* Tema claro (padrão) */
 :root {
-  --color-1: #0025D8;
-  --color-2: #cdcdcd;
-  --color-3: #c2e7ff;
-  --color-4: #000000;
-  --color-5: #6f6f6f;
-  --color-6: #ffffff;
-  --color-7: rgb(255, 0, 0);
+  --color-1: #0025d8; /* Azul primário */
+  --color-2: #cdcdcd; /* Cinza claro */
+  --color-3: #c2e7ff; /* Azul claro */
+  --color-4: #000000; /* Texto principal */
+  --color-5: #6f6f6f; /* Texto secundário */
+  --color-6: #ffffff; /* Fundo */
+  --color-7: rgb(255, 0, 0); /* Vermelho */
 
   --font: Arial, Helvetica, sans-serif;
+}
+
+/* Tema escuro */
+[data-tema="escuro"] {
+  --color-2: #444;
+  --color-3: #2b2b2b;
+  --color-4: #ffffff;
+  --color-6: #121212;
+  --color-7: rgb(255, 0, 0);
 }

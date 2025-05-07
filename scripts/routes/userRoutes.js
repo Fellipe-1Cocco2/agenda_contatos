@@ -1,8 +1,10 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
+import bcrypt from "bcryptjs";
 import { fileURLToPath } from "url";
 import { autenticarUsuario } from "../middleware/authMiddleware.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -27,22 +29,33 @@ router.get("/", autenticarUsuario, async (req, res) => {
   res.json({
     nome: user.nome,
     email: user.email,
-    foto: user.foto || "default.png",
+    fotoPerfil: user.fotoPerfil || "default.png",
   });
+
+  console.log(user.fotoPerfil);
 });
 
-// Rota PUT para atualizar dados do usuário
 router.put("/", autenticarUsuario, upload.single("foto"), async (req, res) => {
   try {
-    const user = req.user;
     const { nome, email, senha } = req.body;
+    const userId = req.user.id || req.user._id;
 
-    if (nome) user.nome = nome;
-    if (email) user.email = email;
-    if (senha) user.senha = senha;
-    if (req.file) user.foto = req.file.filename;
+    const usuario =
+      (await User.findByPk?.(userId)) || (await User.findById?.(userId));
 
-    await user.save();
+    if (!usuario)
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+
+    if (nome) usuario.nome = nome;
+    if (email) usuario.email = email;
+    if (senha && senha.trim() !== "") {
+      usuario.senha = await bcrypt.hash(senha, 10);
+    }
+    if (req.file) {
+      usuario.fotoPerfil = req.file.filename;
+    }
+
+    await usuario.save();
     res.status(200).json({ mensagem: "Usuário atualizado com sucesso!" });
   } catch (error) {
     console.error("Erro ao atualizar usuário:", error);

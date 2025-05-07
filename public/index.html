@@ -12,6 +12,8 @@
     <script src="./scripts/autenticacao.js" defer></script>
     <script src="./scripts/logoff.js" defer></script>
     <script src="./scripts/modaluser.js" defer></script>
+    <script src="./scripts/autocomplete.js" defer></script>
+
     <title>Agenda de contatos</title>
   </head>
   <body>
@@ -21,14 +23,17 @@
         <img src="./imgs/agenda.png" class="inicio-icon_agenda" />
         <div class="inicio-text_contato">Contatos</div>
       </div>
-      <div class="header-pesquisa">
-        <img src="./imgs/lupa.png" class="pesquisa-icon_pesquisa" />
-        <input
-          id="pesquisa"
-          class="input-pesquisa"
-          type="text"
-          placeholder="Pesquisar"
-        />
+      <div class="header-pesquisa" id="header-pesquisa">
+        <div class="header-pesquisa-conteudo">
+          <img src="./imgs/lupa.png" class="pesquisa-icon_pesquisa" />
+          <input
+            id="pesquisa"
+            class="input-pesquisa"
+            type="text"
+            placeholder="Pesquisar"
+          />
+        </div>
+        <ul id="resultado-pesquisa" class="resultado-pesquisa"></ul>
       </div>
       <div class="header-confg_perfil">
         <button id="abrir-configuracoes" class="icone-config">
@@ -37,10 +42,17 @@
             class="confg_perfil-icon_config"
           />
         </button>
-        <img src="./imgs/perfil.png" class="confg_perfil-icon_perfil" />
-        <button id="btn-logout">Logoff</button>
+        <div class="perfil-container">
+          <img
+            id="img-perfil"
+            src="./imgs/perfil.png"
+            class="confg_perfil-icon_perfil"
+          />
+          <button id="btn-logout">Logoff</button>
+        </div>
       </div>
     </header>
+
     <main class="main-container">
       <nav class="nav-container">
         <a href="/criar-contato" class="nav-link-criar_contato">
@@ -69,6 +81,7 @@
           <!-- Marcadores serão adicionados aqui -->
         </ul>
       </nav>
+
       <div class="contatos-container">
         <h1 class="contatos-titulo">Contatos (0)</h1>
         <div class="contatos-cabecalho">
@@ -79,6 +92,7 @@
         <div class="contato-conteudo" id="lista-contatos"></div>
       </div>
     </main>
+    <!-- modal marcador -->
     <div id="modal-marcador" class="modal-marcador">
       <div class="modal-conteudo">
         <h3>Novo Marcador</h3>
@@ -93,7 +107,7 @@
         </div>
       </div>
     </div>
-    <!-- Modal -->
+    <!-- modal user -->
     <div id="modal-configuracoes" class="modal hidden">
       <div class="modal-content">
         <span id="fechar-modal" class="close">&times;</span>
@@ -109,22 +123,37 @@
             <input type="file" id="foto-perfil" name="foto" accept="image/*" />
           </div>
 
-          <label>Nome:</label>
-          <input type="text" id="nome" name="nome" required />
+          <div class="form-group">
+            <label for="nome">Nome:</label>
+            <input type="text" id="nome" name="nome" required />
+          </div>
 
-          <label>Email:</label>
-          <input type="email" id="email" name="email" required />
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
 
-          <label>Senha:</label>
-          <input
-            type="password"
-            id="senha"
-            name="senha"
-            placeholder="Nova senha (opcional)"
-          />
+          <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input
+              type="password"
+              id="senha"
+              name="senha"
+              placeholder="Nova senha (opcional)"
+            />
+          </div>
 
-          <button type="submit">Salvar alterações</button>
+          <button type="submit" class="btn-salvar">Salvar alterações</button>
         </form>
+
+        <hr />
+
+        <h3>Visual</h3>
+        <label class="switch">
+          <input type="checkbox" id="toggle-tema" />
+          <span class="slider round"></span>
+          Tema escuro
+        </label>
       </div>
     </div>
   </body>

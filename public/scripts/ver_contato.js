@@ -142,7 +142,7 @@ async function atualizarMarcadorContato(contatoId, marcador, adicionar) {
       },
       body: JSON.stringify({ marcador, adicionar }),
     });
-
+    window.location.reload();
     if (resposta.status === 401) return (window.location.href = "/login");
 
     if (!resposta.ok) {
@@ -189,6 +189,7 @@ function configurarBotaoFavorito(contato) {
       if (!resposta.ok) throw new Error("Erro ao atualizar favorito");
 
       atualizarIcone(novoStatus);
+      window.location.reload();
     } catch (error) {
       console.error("Erro ao atualizar favorito:", error);
     }
