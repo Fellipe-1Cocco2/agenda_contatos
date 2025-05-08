@@ -16,7 +16,7 @@
   <body>
     <header class="header-container">
       <div class="header-inicio">
-        <img src="../imgs/menu-aberto.png" class="inicio-icon_menu" />
+        <img src="../imgs/menu-aberto.png" class="inicio-icon_menu" id="inicio-icon_menu"/>
         <img src="../imgs/agenda.png" class="inicio-icon_agenda" />
         <div class="inicio-text_contato">Contatos</div>
       </div>
@@ -37,6 +37,7 @@
           <img
             src="../imgs/configuracoes.png"
             class="confg_perfil-icon_config"
+            id="confg_perfil-icon_config"
           />
         </button>
         <div class="perfil-container">
@@ -56,26 +57,27 @@
           <img
             src="../imgs/mais.png"
             class="link-criar_contato-img img-icons"
+            id="link-criar_contato-img"
           />
           <div class="link-criar_contato-texto">Criar contato</div>
         </a>
         <div class="nav-menu">
-          <a href="/" class="menu-contatos menu-link">
-            <img class="img-icons" src="../imgs/contato.png" />
+          <a href="#" class="menu-contatos menu-link">
+            <img class="img-icons" id="menu-contatos" src="../imgs/contato.png" />
             <div class="menu-contatos-texto">Contatos</div>
           </a>
           <a href="/favoritos" class="menu-favoritos menu-link">
-            <img class="img-icons" src="../imgs/estrela.png" />
+            <img class="img-icons" id="icon-fav" src="../imgs/estrela.png" />
             <div class="menu-favoritos-texto">Favoritos</div>
           </a>
           <a href="/lixeira" class="menu-lixeira menu-link">
-            <img class="img-icons" src="../imgs/lixeira.png" />
+            <img class="img-icons" id="menu-lixeira" src="../imgs/lixeira.png" />
             <div class="menu-lixeira-texto">Lixeira</div>
           </a>
         </div>
         <div class="nav-marcadores">
           <div class="nav-marcadores-texto">Marcadores</div>
-          <img src="../imgs/mais.png" class="img-icons" />
+          <img src="../imgs/mais.png" id="marcadores-icon" class="img-icons" />
         </div>
         <ul id="lista-marcadores">
           <!-- Marcadores serão adicionados aqui -->

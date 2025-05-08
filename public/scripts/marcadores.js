@@ -78,7 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const btnEditar = document.createElement("button");
         btnEditar.classList.add("btn-editar-marcador");
         btnEditar.title = "Editar marcador";
-        btnEditar.innerHTML = `<img src="../imgs/editar.png" alt="Editar" />`;
+        const temaAtual = localStorage.getItem("tema") || "claro";
+        const iconeEditar = temaAtual === "escuro" ? "../imgs/editar-azul.png" : "../imgs/editar.png";
+        btnEditar.innerHTML = `<img src="${iconeEditar}" alt="Editar" id="icon-editar"/>`;
 
         btnEditar.addEventListener("click", (e) => {
           e.preventDefault();
@@ -109,7 +111,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const btnExcluir = document.createElement("button");
         btnExcluir.classList.add("btn-excluir-marcador");
         btnExcluir.title = "Excluir marcador";
-        btnExcluir.innerHTML = `<img src="../imgs/lixeira.png" alt="Excluir" />`;
+        const iconeExcluir = temaAtual === "escuro" ? "../imgs/lixeira-azul.png" : "../imgs/lixeira.png";
+        btnExcluir.innerHTML = `<img src="${iconeExcluir}" alt="Editar" id="icon-editar"/>`;
+        
 
         btnExcluir.addEventListener("click", async (e) => {
           e.preventDefault();

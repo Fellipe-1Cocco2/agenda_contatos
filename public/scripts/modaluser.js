@@ -62,17 +62,46 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 const toggleTema = document.getElementById("toggle-tema");
+const iconeMenu = document.getElementById("inicio-icon_menu");
+const iconeConfig = document.getElementById("confg_perfil-icon_config");
+const iconeMais = document.getElementById("link-criar_contato-img");
+const iconeMarcadores = document.getElementById("marcadores-icon");
+const iconeContatos = document.getElementById("menu-contatos");
+const iconeFavoritos = document.getElementById("icon-fav");
+const iconeLixeira = document.getElementById("menu-lixeira");
+const iconeEditarcontato = document.getElementById("btn-editar-contato");
+
+function atualizarTema(tema) {
+  document.documentElement.setAttribute("data-tema", tema);
+  localStorage.setItem("tema", tema);
+  toggleTema.checked = tema === "escuro";
+
+  // Atualiza o ícone de acordo com o tema
+  if (tema === "escuro") {
+    iconeMenu.src = "../imgs/menu-azul.png";
+    iconeConfig.src = "../imgs/configuracao-azul.png";
+    iconeMais.src = "../imgs/mais-azul.png";
+    iconeContatos.src = "../imgs/contato-azul.png";
+    iconeFavoritos.src = "../imgs/estrela-azul.png";
+    iconeLixeira.src = "../imgs/lixeira-azul.png";
+    iconeMarcadores.src = "../imgs/mais-azul.png";
+  } else {
+    iconeMenu.src = "../imgs/menu-aberto.png";
+    iconeConfig.src = "../imgs/configuracoes.png";
+    iconeMais.src = "../imgs/mais.png";
+    iconeContatos.src = "../imgs/contato.png";
+    iconeFavoritos.src = "../imgs/estrela.png";
+    iconeLixeira.src = "../imgs/lixeira.png";
+    iconeMarcadores.src = "../imgs/mais.png";
+  }
+}
 
 toggleTema.addEventListener("change", () => {
-  const modoEscuro = toggleTema.checked;
-  document.documentElement.setAttribute(
-    "data-tema",
-    modoEscuro ? "escuro" : "claro"
-  );
-  localStorage.setItem("tema", modoEscuro ? "escuro" : "claro");
+  const tema = toggleTema.checked ? "escuro" : "claro";
+  atualizarTema(tema);
 });
 
 // Ao carregar, verificar tema salvo
 const temaSalvo = localStorage.getItem("tema") || "claro";
-document.documentElement.setAttribute("data-tema", temaSalvo);
-toggleTema.checked = temaSalvo === "escuro";
+atualizarTema(temaSalvo);
+

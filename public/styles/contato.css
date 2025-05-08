@@ -109,3 +109,16 @@
   margin-top: 10px;
   transition: background 0.3s;
 }
+
+
+.marcadores-contato-lista li{
+  color: var(--color-5);
+}
+
+.marcadores-checkboxes{
+  color: var(--color-5);
+}
+
+.label-marcador{
+  color: var(--color-5);
+}

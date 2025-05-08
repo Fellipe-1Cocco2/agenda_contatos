@@ -2,6 +2,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParts = window.location.pathname.split("/");
   const contatoId = urlParts[urlParts.length - 1];
 
+  const temaAtual = localStorage.getItem("tema") || "claro";
+  const btnEditarcontato = document.getElementById("iconeEditarcontato")
+  const iconeEditarcontato = temaAtual === "escuro" ? "../imgs/editar-azul.png" : "../imgs/editar.png";
+  btnEditarcontato.src = {iconeEditarcontato}
+
   const token = localStorage.getItem("token");
   if (!token) return (window.location.href = "/login");
 
@@ -117,6 +122,7 @@ async function carregarCheckboxesMarcadores(contato) {
 
       const label = document.createElement("label");
       label.htmlFor = checkbox.id;
+      label.classList = "label-marcador"
       label.textContent = m;
 
       const div = document.createElement("div");
@@ -237,3 +243,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+
+
