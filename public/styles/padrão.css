@@ -97,6 +97,7 @@ body {
 
 .main-container {
   display: flex;
+  width: 100%;
 }
 
 .nav-container {
@@ -216,4 +217,52 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .nav-link-criar_contato{
+    width: 45%;
+  }
+  .inicio-text_contato{
+    display: none;
+  }
+  .inicio-icon_agenda{
+    width: 35px;
+    height: 35px;
+  }
+  .header-confg_perfil, .header-inicio{
+    gap: 15px;
+  }
+  .header-pesquisa{
+    margin: 0 5px 0 5px;
+  }
+  .cabecalho-email, .contato-email{
+    display: none;
+  }
+}
+
+
+
+@media (max-width: 500px) {
+  .nav-link-criar_contato{
+    width: 80%;
+  }
+
+  .menu-link{
+    width: 80%;
+  }
+
+  .inicio-icon_agenda{
+    width: 35px;
+    height: 35px;
+  }
+  .header-confg_perfil, .header-inicio{
+    gap: 15px;
+  }
+  .header-pesquisa{
+    margin: 0 5px 0 5px;
+  }
+  .cabecalho-telefone, .contato-telefone{
+    display: none;
+  }
 }

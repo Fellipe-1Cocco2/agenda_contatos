@@ -40,16 +40,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         ? new Date(contato.aniversario).toLocaleDateString("pt-BR")
         : "";
 
-    const listaMarcadoresContato = document.getElementById(
-      "lista-marcadores-contato"
-    );
-    listaMarcadoresContato.innerHTML = "";
-    (contato.marcadores || []).forEach((m) => {
-      const li = document.createElement("li");
-      li.textContent = m;
-      listaMarcadoresContato.appendChild(li);
-    });
-
     carregarCheckboxesMarcadores(contato);
     configurarBotaoFavorito(contato);
     preencherFormularioEdicao(contato);
@@ -59,10 +49,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const btnEditar = document.getElementById("btn-editar-contato");
   const formEditar = document.getElementById("form-editar-contato");
-  const infosContato = document.getElementById("detalhes-contato-info");
+  const infoDetalhe = document.getElementById("container-detalhe");
+  const infoFotoNome = document.getElementById("container-foto-nome");
+  const infoMarcadores = document.getElementById("marcadores-checkboxes");
+  const infoBotoes = document.getElementById("botoes");
+
   btnEditar.addEventListener("click", () => {
     formEditar.style.display = "block";
-    infosContato.style.display = "none";
+    infoDetalhe.style.display = "none";
+    infoFotoNome.style.display = "none";
+    infoMarcadores.style.display = "none";
+    infoBotoes.style.display = "none";
   });
 
   const editarForm = document.getElementById("editar-contato-form");

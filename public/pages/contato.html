@@ -11,6 +11,7 @@
     <script src="../scripts/logoff.js" defer></script>
     <script src="../scripts/modaluser.js" defer></script>
     <script src="../scripts/autocomplete.js" defer></script>
+    <script src="../scripts/menu.js" defer></script>
     <title>Contato</title>
   </head>
   <body>
@@ -84,44 +85,33 @@
         </ul>
       </nav>
 
-      <div class="contato-detalhado-container">
-        <h1 class="contato-detalhado-titulo">Detalhes do Contato</h1>
-        <div id="detalhes-contato" class="detalhes-contato">
-          <!-- Dados do contato serão inseridos aqui -->
-          <div id="detalhes-contato-info">
-            <div class="foto-contato">
+      <div class="contato-detalhado-container" id="contato-detalhado-container">
+        <div class="botoes" id="botoes">
+          <div class="favoritar">
+            <button class="btn-favorito" data-favorito="false">
+              <img src="../imgs/estrela-vazia.png" alt="Favorito" />
+            </button>
+          </div>  
+          <div class="editar">
+            <button id="btn-editar-contato" class="btn-editar"><img id="img-editar-contato" src="../imgs/editar.png"/></button>
+          </div>
+          <div class="excluir">
+            <button id="btn-excluir-contato" class="btn btn-danger"><img id="img-excluir-contato" src="../imgs/lixeira.png"/></button>
+          </div>
+      </div>
+      <div class="container-foto-nome" id="container-foto-nome">
+          <div class="foto-contato">
               <!-- Foto do contato será exibida aqui -->
               <img id="img-contato" src="../imgs/perfil.png" alt="Foto do Contato" />
-            </div>
-            <p><strong>Nome:</strong> <span id="nome-contato"></span></p>
-            <p>
-              <strong>Telefone:</strong> <span id="telefone-contato"></span>
-            </p>
-            <p><strong>Email:</strong> <span id="email-contato"></span></p>
-            <p>
-              <strong>Aniversário:</strong>
-              <span id="aniversario-contato"></span>
-            </p>
-            <p>
-              <strong>Marcadores:</strong>
-              <ul id="lista-marcadores-contato" class="marcadores-contato-lista"></ul>
-            </p>
-            <div class="botoes">
-              <div class="favoritar">
-                <button class="btn-favorito" data-favorito="false">
-                  <img src="../imgs/estrela-vazia.png" alt="Favorito" />
-                </button>
-              </div>  
-              <div class="editar">
-                <button id="btn-editar-contato" class="btn-editar"><img id="img-editar-contato" src="../imgs/editar.png"/></button>
-              </div>
-              <div class="excluir">
-                <button id="btn-excluir-contato" class="btn btn-danger"><img id="img-excluir-contato" src="../imgs/lixeira.png"/></button>
-              </div>
-            </div>  
-            <div><strong>Adicionar marcadores:</strong></div>
-            <div id="marcadores-checkboxes"></div>
           </div>
+          <span id="nome-contato"></span>
+      </div>
+      <div id="marcadores-checkboxes"></div>
+      <div class="container-detalhe" id="container-detalhe">
+          <p><strong>Telefone:</strong> <span id="telefone-contato"></span></p>
+          <p><strong>Email:</strong> <span id="email-contato"></span></p>
+          <p><strong>Aniversário:</strong> <span id="aniversario-contato"></span></p>
+      </div>
 
           <!-- Formulário de edição (inicialmente escondido) -->
           <div

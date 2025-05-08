@@ -26,8 +26,37 @@
 
 .botoes {
   display: flex;
+  justify-content: end;
   gap: 30px;
   padding: 20px;
+  margin-right: 15%;
+}
+
+.container-foto-nome{
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+#nome-contato{
+  font-size: 24px;
+}
+
+.container-detalhe{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  border-radius: 10px;
+  gap: 20px;
+  width: 50%;
+}
+
+#marcadores-checkboxes{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  height: 50px;
 }
 
 .favoritar,
@@ -60,6 +89,22 @@
 .btn-editar img {
   width: 15px;
   height: 15px;
+}
+
+.container-detalhe p strong{
+  color: var(--color-4);
+}
+
+#img-contato,
+#foto-preview {
+  width: 200px;
+  border-radius: 50%;
+  background-color: white;
+  border-radius: 50%;
+}
+
+#telefone-contato, #email-contato, #aniversario-contato, #nome-contato{
+  color: var(--color-4);
 }
 
 #form-editar-contato {
@@ -120,12 +165,6 @@
 
 .label-marcador {
   color: var(--color-5);
-}
-
-#img-contato,
-#foto-preview {
-  width: 200px;
-  border-radius: 50%;
 }
 
 .editar-foto-contato-label {
