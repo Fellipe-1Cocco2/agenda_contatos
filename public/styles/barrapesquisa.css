@@ -57,3 +57,8 @@
   border: none;
   font-size: 12px;
 }
+
+.link-pesquisa {
+  text-decoration: none;
+  color: var(--color-4);
+}

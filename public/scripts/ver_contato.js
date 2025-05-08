@@ -2,11 +2,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const urlParts = window.location.pathname.split("/");
   const contatoId = urlParts[urlParts.length - 1];
 
-  const temaAtual = localStorage.getItem("tema") || "claro";
-  const btnEditarcontato = document.getElementById("iconeEditarcontato")
-  const iconeEditarcontato = temaAtual === "escuro" ? "../imgs/editar-azul.png" : "../imgs/editar.png";
-  btnEditarcontato.src = {iconeEditarcontato}
-
   const token = localStorage.getItem("token");
   if (!token) return (window.location.href = "/login");
 
@@ -19,6 +14,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const contato = await resposta.json();
     if (!contato) throw new Error("Contato não encontrado");
+
+    // Carregar foto do contato no detalhe
+    const fotoContatosalvo = document.getElementById("img-contato");
+    const fotoPreview = document.getElementById("foto-preview");
+
+    fotoPreview.src = contato.fotoContato
+      ? `/uploads/${contato.fotoContato}`
+      : "../imgs/perfil.png";
+
+    console.log(contato.fotoContato);
+    // Se houver foto no banco de dados, exibe ela, senão usa uma foto padrão
+    fotoContatosalvo.src = contato.fotoContato
+      ? `/uploads/${contato.fotoContato}`
+      : "../imgs/perfil.png";
 
     document.getElementById("nome-contato").textContent = `${
       contato.nome || ""
@@ -65,27 +74,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     const telefoneInput = document.getElementById("editar-telefone");
     const emailInput = document.getElementById("editar-email");
     const aniversarioInput = document.getElementById("editar-aniversario");
+    const fotoInput = document.getElementById("editar-foto-contato");
 
     const nome = nomeInput.value;
     const sobrenome = sobrenomeInput.value;
     const telefone = telefoneInput.value;
     const email = emailInput.value;
     const aniversario = aniversarioInput.value;
+    const foto = fotoInput.files[0]; // Aqui pegamos a foto selecionada pelo usuário
+
+    const formData = new FormData();
+    formData.append("nome", nome);
+    formData.append("sobrenome", sobrenome);
+    formData.append("telefone", telefone);
+    formData.append("email", email);
+    formData.append("aniversario", aniversario || null);
+    if (foto) formData.append("foto", foto); // Se uma nova foto for selecionada, anexamos ao formData
+    console.log(foto);
 
     try {
       const resposta = await fetch(`/api/contatos/${contatoId}`, {
         method: "PATCH",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          nome,
-          sobrenome,
-          telefone,
-          email,
-          aniversario: aniversario || null,
-        }),
+        body: formData, // Usamos o FormData para enviar arquivos junto com os dados
       });
 
       if (!resposta.ok) throw new Error("Erro ao atualizar contato");
@@ -93,6 +106,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       location.reload();
     } catch (error) {
       console.error("Erro ao atualizar contato:", error);
+    }
+  });
+
+  // Pré-visualização da foto
+  const fotoInput = document.getElementById("editar-foto-contato");
+  const fotoPreview = document.getElementById("foto-preview");
+
+  fotoInput.addEventListener("change", (e) => {
+    const arquivo = e.target.files[0];
+    if (arquivo) {
+      const reader = new FileReader();
+      reader.onload = function (evento) {
+        fotoPreview.src = evento.target.result;
+      };
+      reader.readAsDataURL(arquivo);
     }
   });
 });
@@ -122,7 +150,7 @@ async function carregarCheckboxesMarcadores(contato) {
 
       const label = document.createElement("label");
       label.htmlFor = checkbox.id;
-      label.classList = "label-marcador"
+      label.classList = "label-marcador";
       label.textContent = m;
 
       const div = document.createElement("div");
@@ -244,5 +272,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.addEventListener("DOMContentLoaded", async () => {
+  const temaAtual = localStorage.getItem("tema") || "claro";
+  const btnEditarcontato = document.getElementById("img-editar-contato"); // Certifique-se de que o ID está correto
+  const btnExcluircontato = document.getElementById("img-excluir-contato");
 
+  const iconeEditarcontato =
+    temaAtual === "escuro" ? "../imgs/editar-azul.png" : "../imgs/editar.png";
+  btnEditarcontato.src = iconeEditarcontato; // Altera o src da imagem
 
+  const iconeExcluircontato =
+    temaAtual === "escuro" ? "../imgs/lixeira-azul.png" : "../imgs/lixeira.png";
+  btnExcluircontato.src = iconeExcluircontato; // Altera o src da imagem
+});

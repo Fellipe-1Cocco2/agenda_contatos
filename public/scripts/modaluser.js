@@ -30,7 +30,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log(fotoPreview.src);
   });
 
-  fechar.addEventListener("click", () => modal.classList.add("hidden"));
+  fechar.addEventListener("click", () => {
+    modal.classList.add("hidden");
+    window.location.reload();
+  });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -104,4 +107,3 @@ toggleTema.addEventListener("change", () => {
 // Ao carregar, verificar tema salvo
 const temaSalvo = localStorage.getItem("tema") || "claro";
 atualizarTema(temaSalvo);
-

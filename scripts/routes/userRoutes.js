@@ -23,6 +23,22 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// GET /api/usuario/contatos
+router.get("/pesquisa", autenticarUsuario, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user)
+      return res.status(404).json({ mensagem: "Usuário não encontrado." });
+
+    // Retorna apenas contatos que não estão na lixeira
+    const contatos = user.contatos.filter((contato) => !contato.lixeira);
+    res.json(contatos);
+  } catch (error) {
+    console.error("Erro ao buscar contatos:", error);
+    res.status(500).json({ mensagem: "Erro ao buscar contatos." });
+  }
+});
+
 // Rota GET para carregar os dados do usuário
 router.get("/", autenticarUsuario, async (req, res) => {
   const user = req.user;

@@ -1,33 +1,42 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   const pesquisaInput = document.getElementById("pesquisa");
   const resultadoPesquisa = document.getElementById("resultado-pesquisa");
   const headerPesquisa = document.getElementById("header-pesquisa");
 
-  // Suponha que você tenha uma lista de contatos
-  const contatos = [
-    { nome: "João Silva", telefone: "987654321", email: "joao@email.com" },
-    { nome: "João Silva", telefone: "987654321", email: "joao@email.com" },
-    { nome: "João Silva", telefone: "987654321", email: "joao@email.com" },
-    { nome: "João Silva", telefone: "987654321", email: "joao@email.com" },
-    { nome: "Maria Oliveira", telefone: "912345678", email: "maria@email.com" },
-    { nome: "Carlos Souza", telefone: "998877665", email: "carlos@email.com" },
-    // Mais contatos...
-  ];
+  let contatos = [];
 
-  // Função para filtrar contatos
+  try {
+    const token = localStorage.getItem("token");
+    const res = await fetch("/api/usuario/pesquisa", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("Erro ao buscar contatos");
+
+    contatos = await res.json();
+    console.log("Contatos carregados:", contatos);
+  } catch (error) {
+    console.error("Erro ao carregar contatos:", error);
+  }
+
   function filtrarContatos(termo) {
+    const termoNormalizado = termo.replace(/\D/g, "").toLowerCase();
+
     return contatos.filter((contato) => {
+      const telefoneNormalizado = (contato.telefone || "").replace(/\D/g, "");
       return (
         contato.nome.toLowerCase().includes(termo) ||
-        contato.telefone.includes(termo) ||
-        contato.email.toLowerCase().includes(termo)
+        contato.sobrenome.toLowerCase().includes(termo) ||
+        telefoneNormalizado.includes(termoNormalizado) ||
+        (contato.email && contato.email.toLowerCase().includes(termo))
       );
     });
   }
 
-  // Função para renderizar resultados da pesquisa
   function renderizarResultados(resultados) {
-    resultadoPesquisa.innerHTML = ""; // Limpa resultados anteriores
+    resultadoPesquisa.innerHTML = "";
     if (resultados.length === 0) {
       resultadoPesquisa.style.display = "none";
       return;
@@ -35,32 +44,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     resultados.forEach((contato) => {
       const li = document.createElement("li");
-      li.textContent = `${contato.nome} - ${contato.email} - ${contato.telefone}`;
+      const a = document.createElement("a");
+
+      a.href = `/contato/${contato._id}`;
+      a.classList = "link-pesquisa";
+      a.textContent = `${contato.nome} ${contato.sobrenome} - ${contato.email} - ${contato.telefone}`;
+      li.appendChild(a);
+
       li.addEventListener("click", () => {
-        pesquisaInput.value = contato.nome; // Atualiza o input com o nome do contato
-        resultadoPesquisa.style.display = "none"; // Fecha a lista de sugestões
+        pesquisaInput.value = `${contato.nome} ${contato.sobrenome}`;
+        resultadoPesquisa.style.display = "none";
         headerPesquisa.style.borderRadius = "20px";
       });
+
       resultadoPesquisa.appendChild(li);
     });
 
-    resultadoPesquisa.style.display = "block"; // Exibe a lista de resultados
+    resultadoPesquisa.style.display = "block";
     headerPesquisa.style.borderRadius = "20px 20px 0px 0px";
   }
 
-  // Evento de input para filtrar e mostrar os resultados
   pesquisaInput.addEventListener("input", function () {
     const termo = pesquisaInput.value.toLowerCase();
     if (termo.length > 0) {
       const resultados = filtrarContatos(termo);
+      console.log("Resultados da busca:", resultados);
       renderizarResultados(resultados);
     } else {
-      resultadoPesquisa.style.display = "none"; // Esconde a lista se o campo estiver vazio
+      resultadoPesquisa.style.display = "none";
       headerPesquisa.style.borderRadius = "20px";
     }
   });
 
-  // Fechar a lista de resultados quando o usuário clicar fora
   document.addEventListener("click", function (event) {
     if (
       !resultadoPesquisa.contains(event.target) &&

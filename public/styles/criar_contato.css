@@ -99,3 +99,8 @@
   color: var(--color-7);
   font-size: 12px;
 }
+
+#preview-imagem-contato {
+  width: 200px;
+  border-radius: 50%;
+}

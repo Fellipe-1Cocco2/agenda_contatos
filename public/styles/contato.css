@@ -110,15 +110,28 @@
   transition: background 0.3s;
 }
 
-
-.marcadores-contato-lista li{
+.marcadores-contato-lista li {
   color: var(--color-5);
 }
 
-.marcadores-checkboxes{
+.marcadores-checkboxes {
   color: var(--color-5);
 }
 
-.label-marcador{
+.label-marcador {
   color: var(--color-5);
+}
+
+#img-contato,
+#foto-preview {
+  width: 200px;
+  border-radius: 50%;
+}
+
+.editar-foto-contato-label {
+  color: var(--color-4);
+}
+
+.editar-foto-contato {
+  margin-top: 10px;
 }

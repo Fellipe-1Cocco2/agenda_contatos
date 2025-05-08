@@ -1,8 +1,25 @@
 import express from "express";
+import multer from "multer";
+import path from "path";
+import { fileURLToPath } from "url";
 import { autenticarUsuario } from "../middleware/authMiddleware.js";
 import User from "../models/User.js";
-
 const router = express.Router();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Configuração do Multer para uploads de imagens
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../../public/uploads"));
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    cb(null, `${Date.now()}-${file.fieldname}${ext}`);
+  },
+});
+const upload = multer({ storage });
 
 // Listar contatos (ignorar os que estão na lixeira)
 router.get("/", autenticarUsuario, async (req, res) => {
@@ -85,61 +102,101 @@ router.get("/:id", autenticarUsuario, async (req, res) => {
 });
 
 // Criar contato
-router.post("/criar-contato", autenticarUsuario, async (req, res) => {
-  try {
-    const { nome, sobrenome, telefone, email, aniversario } = req.body;
-    const novoContato = { nome, sobrenome, telefone, email, aniversario };
-    req.user.contatos.push(novoContato);
-    await req.user.save();
-    res.status(201).json({ mensagem: "Contato criado com sucesso!" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ mensagem: "Erro ao criar contato." });
-  }
-});
-
-// Atualizar Contato
-router.patch("/:id", autenticarUsuario, async (req, res) => {
-  const { id } = req.params;
-  const { nome, sobrenome, telefone, email, aniversario } = req.body;
-
-  try {
-    // Verifica se o ID é válido
-    const contato = await User.findOne({ "contatos._id": id });
-
-    if (!contato) {
-      return res.status(404).json({ mensagem: "Contato não encontrado." });
-    }
-
-    const contatoAtualizado = contato.contatos.id(id);
-
-    if (nome) contatoAtualizado.nome = nome;
-    if (sobrenome) contatoAtualizado.sobrenome = sobrenome;
-    if (telefone) contatoAtualizado.telefone = telefone;
-    if (email) contatoAtualizado.email = email;
-
-    // Trata o aniversário
-    if (aniversario) {
-      const data = new Date(aniversario);
-      if (isNaN(data)) {
+router.post(
+  "/criar-contato",
+  autenticarUsuario,
+  upload.single("foto"), // Configuração do multer
+  async (req, res) => {
+    try {
+      // Validação dos dados recebidos
+      const { nome, sobrenome, telefone, email, aniversario } = req.body;
+      if (!nome || !telefone || !email) {
         return res
           .status(400)
-          .json({ mensagem: "Data de aniversário inválida." });
+          .json({ mensagem: "Nome, telefone e email são obrigatórios." });
       }
-      // Corrige para UTC para evitar erro de fuso horário
-      data.setUTCHours(12);
-      contatoAtualizado.aniversario = data;
-    }
 
-    await contato.save();
-    res.json({ mensagem: "Contato atualizado com sucesso." });
-  } catch (erro) {
-    console.error("Erro ao atualizar contato:", erro);
-    res
-      .status(500)
-      .json({ mensagem: "Erro ao atualizar contato", erro: erro.message });
+      const foto = req.file ? req.file.filename : "default.png"; // Foto do contato (caso não tenha, usa padrão)
+
+      const novoContato = {
+        nome,
+        sobrenome,
+        telefone,
+        email,
+        aniversario,
+        fotoContato: foto, // Nome do arquivo da foto
+      };
+
+      console.log("Antes do push:", req.user.contatos.length);
+
+      req.user.contatos.push(novoContato); // Adiciona o novo contato no array de contatos do usuário
+
+      console.log("Depois do push:", req.user.contatos.length);
+
+      await req.user.save(); // Salva o usuário com o novo contato
+
+      console.log("Contato salvo com sucesso");
+
+      res.status(201).json({ mensagem: "Contato criado com sucesso!" });
+    } catch (error) {
+      console.error("Erro ao criar contato:", error);
+      res
+        .status(500)
+        .json({ mensagem: "Erro ao criar contato.", erro: error.message });
+    }
   }
-});
+);
+
+// Atualizar Contato (com suporte a imagem)
+router.patch(
+  "/:id",
+  autenticarUsuario,
+  upload.single("foto"),
+  async (req, res) => {
+    const { id } = req.params;
+    const { nome, sobrenome, telefone, email, aniversario } = req.body;
+    const foto = req.file ? req.file.filename : null;
+
+    try {
+      const user = await User.findOne({ "contatos._id": id });
+
+      if (!user) {
+        return res.status(404).json({ mensagem: "Contato não encontrado." });
+      }
+
+      const contato = user.contatos.id(id);
+
+      if (nome) contato.nome = nome;
+      if (sobrenome) contato.sobrenome = sobrenome;
+      if (telefone) contato.telefone = telefone;
+      if (email) contato.email = email;
+
+      if (aniversario) {
+        const data = new Date(aniversario);
+        if (isNaN(data)) {
+          return res
+            .status(400)
+            .json({ mensagem: "Data de aniversário inválida." });
+        }
+        data.setUTCHours(12); // Corrigir timezone
+        contato.aniversario = data;
+      }
+
+      if (foto) {
+        contato.fotoContato = foto; // Atualiza a imagem, se houver
+      }
+
+      await user.save();
+
+      res.json({ mensagem: "Contato atualizado com sucesso." });
+    } catch (erro) {
+      console.error("Erro ao atualizar contato:", erro);
+      res
+        .status(500)
+        .json({ mensagem: "Erro ao atualizar contato", erro: erro.message });
+    }
+  }
+);
 
 // Exemplo usando Express.js
 router.patch("/:id/favorito", autenticarUsuario, async (req, res) => {

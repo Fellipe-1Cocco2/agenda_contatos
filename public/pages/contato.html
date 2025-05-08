@@ -62,7 +62,7 @@
           <div class="link-criar_contato-texto">Criar contato</div>
         </a>
         <div class="nav-menu">
-          <a href="#" class="menu-contatos menu-link">
+          <a href="/" class="menu-contatos menu-link">
             <img class="img-icons" id="menu-contatos" src="../imgs/contato.png" />
             <div class="menu-contatos-texto">Contatos</div>
           </a>
@@ -89,6 +89,10 @@
         <div id="detalhes-contato" class="detalhes-contato">
           <!-- Dados do contato serão inseridos aqui -->
           <div id="detalhes-contato-info">
+            <div class="foto-contato">
+              <!-- Foto do contato será exibida aqui -->
+              <img id="img-contato" src="../imgs/perfil.png" alt="Foto do Contato" />
+            </div>
             <p><strong>Nome:</strong> <span id="nome-contato"></span></p>
             <p>
               <strong>Telefone:</strong> <span id="telefone-contato"></span>
@@ -109,17 +113,14 @@
                 </button>
               </div>  
               <div class="editar">
-                <button id="btn-editar-contato" class="btn-editar"><img src="../imgs/editar.png"/></button>
+                <button id="btn-editar-contato" class="btn-editar"><img id="img-editar-contato" src="../imgs/editar.png"/></button>
               </div>
               <div class="excluir">
-                <button id="btn-excluir-contato" class="btn btn-danger"><img src="../imgs/lixeira.png"/></button>
+                <button id="btn-excluir-contato" class="btn btn-danger"><img id="img-excluir-contato" src="../imgs/lixeira.png"/></button>
               </div>
             </div>  
-            
-
             <div><strong>Adicionar marcadores:</strong></div>
             <div id="marcadores-checkboxes"></div>
-
           </div>
 
           <!-- Formulário de edição (inicialmente escondido) -->
@@ -130,6 +131,14 @@
           >
             <h2>Editar Contato</h2>
             <form id="editar-contato-form">
+              <div class="foto-contato-editar">
+                <!-- Preview da imagem -->
+                <div id="foto-contato-preview">
+                  <img id="foto-preview" src="../imgs/perfil.png" alt="Foto de Perfil" />
+                </div>
+                <label class="editar-foto-contato-label" >Escolher nova foto:</label>
+                <input type="file" id="editar-foto-contato" name="foto" accept="image/*"/>
+              </div>
               <input type="text" id="editar-nome" placeholder="Nome" />
               <input
                 type="text"
@@ -146,6 +155,7 @@
               <button type="submit">Salvar Alterações</button>
             </form>
           </div>
+
         </div>
       </div>
     </main>
@@ -164,6 +174,7 @@
         </div>
       </div>
     </div>
+
     <!-- modal user -->
     <div id="modal-configuracoes" class="modal hidden">
       <div class="modal-content">

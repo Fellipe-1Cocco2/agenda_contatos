@@ -12,6 +12,7 @@ const contatoSchema = new mongoose.Schema({
   marcadores: [String], // ← opcional: se quiser marcar contatos também
   lixeira: { type: Boolean, default: false },
   dataRemocao: { type: Date, default: null },
+  fotoContato: { type: String, default: "default.png" },
 });
 
 const userSchema = new mongoose.Schema({

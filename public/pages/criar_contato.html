@@ -16,13 +16,17 @@
   <body>
     <header class="header-container">
       <div class="header-inicio">
-        <img src="../imgs/menu-aberto.png" class="inicio-icon_menu" />
-        <img src="../imgs/agenda.png" class="inicio-icon_agenda" />
+        <img
+          src="./imgs/menu-aberto.png"
+          class="inicio-icon_menu"
+          id="inicio-icon_menu"
+        />
+        <img src="./imgs/agenda.png" class="inicio-icon_agenda" />
         <div class="inicio-text_contato">Contatos</div>
       </div>
       <div class="header-pesquisa" id="header-pesquisa">
         <div class="header-pesquisa-conteudo">
-          <img src="../imgs/lupa.png" class="pesquisa-icon_pesquisa" />
+          <img src="./imgs/lupa.png" class="pesquisa-icon_pesquisa" />
           <input
             id="pesquisa"
             class="input-pesquisa"
@@ -35,46 +39,53 @@
       <div class="header-confg_perfil">
         <button id="abrir-configuracoes" class="icone-config">
           <img
-            src="../imgs/configuracoes.png"
+            src="./imgs/configuracoes.png"
             class="confg_perfil-icon_config"
+            id="confg_perfil-icon_config"
           />
         </button>
         <div class="perfil-container">
           <img
             id="img-perfil"
-            src="../imgs/perfil.png"
+            src="./imgs/perfil.png"
             class="confg_perfil-icon_perfil"
           />
           <button id="btn-logout">Logoff</button>
         </div>
       </div>
     </header>
+
     <main class="main-container">
       <nav class="nav-container">
         <a href="/criar-contato" class="nav-link-criar_contato">
           <img
-            src="../imgs/mais.png"
+            src="./imgs/mais.png"
+            id="link-criar_contato-img"
             class="link-criar_contato-img img-icons"
           />
           <div class="link-criar_contato-texto">Criar contato</div>
         </a>
         <div class="nav-menu">
           <a href="/" class="menu-contatos menu-link">
-            <img class="img-icons" src="../imgs/contato.png" />
+            <img
+              class="img-icons"
+              id="menu-contatos"
+              src="./imgs/contato.png"
+            />
             <div class="menu-contatos-texto">Contatos</div>
           </a>
           <a href="/favoritos" class="menu-favoritos menu-link">
-            <img class="img-icons" src="../imgs/estrela.png" />
+            <img class="img-icons" id="icon-fav" src="./imgs/estrela.png" />
             <div class="menu-favoritos-texto">Favoritos</div>
           </a>
           <a href="/lixeira" class="menu-lixeira menu-link">
-            <img class="img-icons" src="../imgs/lixeira.png" />
+            <img class="img-icons" id="menu-lixeira" src="./imgs/lixeira.png" />
             <div class="menu-lixeira-texto">Lixeira</div>
           </a>
         </div>
         <div class="nav-marcadores">
           <div class="nav-marcadores-texto">Marcadores</div>
-          <img src="../imgs/mais.png" class="img-icons" />
+          <img src="./imgs/mais.png" id="marcadores-icon" class="img-icons" />
         </div>
         <ul id="lista-marcadores">
           <!-- Marcadores serão adicionados aqui -->
@@ -83,7 +94,15 @@
       <div class="criar_contatos-container">
         <h1 class="criar_contatos-titulo">Criar contato</h1>
         <form class="form-criar_contatos" id="form-criar">
-          <img src="../imgs/adicionar-contato.png" class="img-criar_contato" />
+          <div class="input-foto-contato">
+            <img
+              id="preview-imagem-contato"
+              src="/uploads/default.png"
+              alt="Preview da imagem"
+              style="max-width: 150px; margin-top: 10px"
+            />
+            <input type="file" id="foto-contato" name="foto" accept="image/*" />
+          </div>
 
           <input type="text" id="nome" class="input-nome" placeholder="Nome" />
           <small class="erro" id="erro-nome"></small>
