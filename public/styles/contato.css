@@ -112,12 +112,13 @@
   padding: 20px;
   background-color: var(--color-6); /* Fundo do formulário */
   border-radius: 8px;
+  width: 100%;
 }
 
 #editar-contato-form {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   gap: 20px;
 }
 

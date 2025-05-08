@@ -14,7 +14,7 @@
 .form-criar_contatos {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 100%;
   gap: 10px;
 }
 
@@ -38,7 +38,6 @@
   font-size: 14px;
   background-color: var(--color-6);
   color: var(--color-4);
-  width: 200px;
 }
 
 .input-aniversario,
